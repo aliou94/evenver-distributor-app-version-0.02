@@ -3,13 +3,21 @@ import {Field, Form} from 'react-final-form';
 import {makeStyles} from '@material-ui/core/styles';
 import {useTranslate, useNotify} from 'ra-core';
 import {Button, MenuItem, InputLabel, Select, Card, CardActions} from '@material-ui/core';
-import {Notification, required} from "react-admin";
+import {Notification, required, resolveBrowserLocale} from "react-admin";
 import Input from "../../inputComponent";
 import {useState} from "react";
 import LoginForm from "./loginForm";
-//import *  as polyglot from "node-polyglot"
+import {myRoot} from "../../i18n/en";
+//    import I18n from "I18n-extract"
+import Polyglot from "node-polyglot"
 
-//var translate = new Polyglot()
+let polyglot = new Polyglot();
+
+
+polyglot.extend({
+    "emailRequired": "email is required how do i translate that to french"
+});
+
 
 
 let useStyles = makeStyles(function (theme) {
@@ -161,7 +169,10 @@ const Options = () => {
 
 }
 
-export function validate(values) {
+
+
+export function validate(values,localLanguage ) {
+     localLanguage = resolveBrowserLocale()
     let error = {
         email: undefined,
         firstName: undefined,
@@ -172,19 +183,28 @@ export function validate(values) {
         chocolate: undefined
     };
     if (!values.email) {
-        error.email = "email required";
+        error.email = polyglot.I18n.t("emailRequired")
     }
+
     if (!values.firstName) {
-        error.firstName = "first name is required";
+        (localLanguage==="fr")
+           ? error.firstName = "prenom obligatoir"
+            : error.firstName = "first name is required"
     }
     if (!values.lastName) {
-        error.lastName = "last name is required";
+        (localLanguage==="fr")
+        ? error.lastName = "nom requis"
+            : error.lastName = "last name is required";
     }
     if (!values.userPassword) {
-        error.userPassword = "userPassword is required";
+        (localLanguage==="fr")
+        ?error.userPassword = "mot de passe requis"
+        :error.userPassword = "userPassword is required";
     }
     if (!values.password) {
-        error.password = "validation is required";
+        (localLanguage==="fr")
+        ?error.password = "validation requis"
+            : error.password = "validation is required"
     }
     return error
 }
@@ -196,8 +216,7 @@ let RegistrationForm = function (props) {
     let [showLoginForm, setLoginForm] = useState(false)
     let translate = useTranslate();
 
-    function submit({email, userPassword, password, firstName, lastName}) {
-
+function submit({email, userPassword, password, firstName, lastName}) {
         if (userPassword === password) {
             const request = new Request(window.encodeURI('http://localhost:8080/evendistributor/usermanagement/users'), {
                 method: 'POST',

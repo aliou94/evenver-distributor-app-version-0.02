@@ -46,6 +46,7 @@
     "@testing-library/user-event": "^13.0.11",
     "gh-pages": "^3.1.0",
     "history": "^4.10.1",
+    "i18n-extract": "^0.6.7",
     "prop-types": "^15.7.2",
     "ra-i18n-polyglot": "^3.10.2",
     "ra-language-english": "^3.10.2",

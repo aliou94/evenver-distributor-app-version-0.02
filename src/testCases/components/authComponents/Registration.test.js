@@ -7,15 +7,14 @@ import {Component} from "react";
 
 
 
-
-test('adds 1 + 2 to equal 3', () => {
-
+test('validation without values returns required message', () => {
     let values = {
-        email:"email@email",
+        email:"",
         firstName:"firstName"
     }
-
-    expect(Example(values)).toBe(3);
+   let error = validate(values,"fr")
+    expect(error.email).toBe("email requis");
+    expect(error.firstName).toBe(undefined);
 });
 
 
