@@ -14,11 +14,13 @@ import {Notification} from "react-admin";
 import Input from "../../inputComponent";
 
 let LoginForm = function (props) {
+
     let _a = useSafeSetState(false), setLoading = _a[1];
     let login = useLogin();
     let translate = useTranslate();
     let notify = useNotify();
     let classes = Usestyles(props);
+
     let validate = function (values) {
         let errors = { email: undefined, password: undefined };
         if (!values.email) {

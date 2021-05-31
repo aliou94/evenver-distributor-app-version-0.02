@@ -8,8 +8,8 @@ import Input from "../../inputComponent";
 import {useState} from "react";
 import LoginForm from "./loginForm";
 import {myRoot} from "../../i18n/en";
-//    import I18n from "I18n-extract"
-import Polyglot from "node-polyglot"
+//    import I18n from "I18n-extract";
+import Polyglot from "node-polyglot";
 
 let polyglot = new Polyglot();
 
@@ -171,58 +171,54 @@ const Options = () => {
 
 
 
-export function validate(values,localLanguage ) {
-     localLanguage = resolveBrowserLocale()
-    let error = {
-        email: undefined,
-        firstName: undefined,
-        lastName: undefined,
-        cell: undefined,
-        userPassword: undefined,
-        password: undefined,
-        chocolate: undefined
-    };
-    if (!values.email) {
-        error.email = polyglot.I18n.t("emailRequired")
-    }
 
-    if (!values.firstName) {
-        (localLanguage==="fr")
-           ? error.firstName = "prenom obligatoir"
-            : error.firstName = "first name is required"
-    }
-    if (!values.lastName) {
-        (localLanguage==="fr")
-        ? error.lastName = "nom requis"
-            : error.lastName = "last name is required";
-    }
-    if (!values.userPassword) {
-        (localLanguage==="fr")
-        ?error.userPassword = "mot de passe requis"
-        :error.userPassword = "userPassword is required";
-    }
-    if (!values.password) {
-        (localLanguage==="fr")
-        ?error.password = "validation requis"
-            : error.password = "validation is required"
-    }
-    return error
-}
 
 
 let RegistrationForm = function (props) {
+
     let notify = useNotify();
     let classes = useStyles(props);
-    let [showLoginForm, setLoginForm] = useState(false)
+    let [showLoginForm, setLoginForm] = useState(false);
     let translate = useTranslate();
 
+    let  validate = function (values) {
+
+        let errors = { email: undefined,
+            firstName: undefined,
+            lastName:undefined,
+            cell:undefined,
+            userPassword:undefined,
+            password:undefined,
+            city:undefined
+        };
+
+        if (!values.email) {
+            errors.email = translate('ra.validation.required');
+        }
+        if (!values.firstName) {
+            errors.firstName= translate('ra.validation.required');
+        }
+        if (!values.lastName) {
+            errors.lastName = translate('ra.validation.required');
+        }
+        if (!values.userPassword) {
+            errors.userPassword = translate('ra.validation.required');
+        }
+        if (!values.password) {
+            errors.password = translate('ra.validation.required');
+        }
+        return errors;
+    };
+
 function submit({email, userPassword, password, firstName, lastName}) {
+
         if (userPassword === password) {
             const request = new Request(window.encodeURI('http://localhost:8080/evendistributor/usermanagement/users'), {
                 method: 'POST',
                 body: JSON.stringify({email, userPassword, firstName, lastName}),
                 headers: new Headers({'Content-Type': 'application/json'}),
             });
+
             fetch(request)
                 .then(response => {
                     return response.json();
