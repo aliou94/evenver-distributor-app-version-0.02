@@ -11,6 +11,7 @@ import {
 } from 'react-admin';
 import {useTranslate} from "ra-core";
 
+
 export const FullNameFiled = ({record}) => {
     return(
             <div>{record.firstName} {record.lastName}</div>

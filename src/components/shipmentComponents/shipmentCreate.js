@@ -46,7 +46,7 @@ const MerchandiseDataGrid = (props) => {
     )
 }
 
-const MerchandiseStockValidationForm = (...rest) => {
+const MerchandiseStockValidationForm = () => {
     const translate = useTranslate()
     const form = useForm()
     const {values} = useFormState()
@@ -54,12 +54,12 @@ const MerchandiseStockValidationForm = (...rest) => {
     const [option, setOption] = useState("cancel")
     let [open, setOpen] = useState(true)
 
-    const AddMerchandise = () => {
-        setCount(prevState => prevState.concat(values.merchandise))
-        MerchandiseData.push(values.merchandise)
-        checkForDuplicates()
-        resetForm()
-    }
+
+    const resetForm = useCallback(() => {
+        form.change('merchandise.merchandise.category', null);
+        form.change('merchandise.quantity.count', null);
+        form.change("merchandise.merchandise.id")
+    }, [form]);
 
     const checkForDuplicates = () => {
         let pureArray = []
@@ -118,11 +118,12 @@ const MerchandiseStockValidationForm = (...rest) => {
 
     const handleClose = () => setOpen(false)
 
-    const resetForm = useCallback(() => {
-        form.change('merchandise.merchandise.category', null);
-        form.change('merchandise.quantity.count', null);
-        form.change("merchandise.merchandise.id")
-    }, [form]);
+    const AddMerchandise = () => {
+        setCount(prevState => prevState.concat(values.merchandise))
+        MerchandiseData.push(values.merchandise)
+        checkForDuplicates()
+        resetForm()
+    }
 
     return (
         <>
@@ -178,6 +179,7 @@ const transform = data => {
 const ShipmentCreate = props => {
     let permission = localStorage.getItem("permission")
     let translate = useTranslate()
+
     return (
         <Create {...props} title={translate("help.shipment")} transform={transform}>
             <SimpleForm toolbar={<SaveButton/>}>

@@ -17,11 +17,12 @@ const customFrenchMessages = {
     dashboard:{
         welcome:"application cree pour siruis holding avec pour objectif la gestion de la logistique",
         profile:"Mon profile",
-        clients:"client",
-        users:"utilisateur",
+        clients:"Client",
+        users:"Utilisateur",
         welcomeM:"Bienvenue sur la démo de Even-distributor-app",
-        merchandise:"marchandise",
-        shipments:"debarquement"
+        merchandise:"Marchandise",
+        shipments:"Debarquement",
+        distribution:"Distribution"
     },
         auth:{
             email:'Email',

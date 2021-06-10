@@ -2,6 +2,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 let Usestyles = makeStyles(function (theme) { return {
+
     main: {
         "display": 'flex',
         "flexDirection": 'column',
@@ -11,7 +12,7 @@ let Usestyles = makeStyles(function (theme) { return {
         "backgroundSize": 'cover',
     },
     rel:{
-        marginTop: '-18em',
+        marginTop: '-15rem',
     },
     card: {
         minWidth: 300,

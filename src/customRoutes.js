@@ -5,6 +5,7 @@ import ResetPassword from "./components/authComponents/resetPassword";
 import RegistrationForm from "./components/authComponents/Registration";
 import ConfirmPassCode from "./components/authComponents/confirmPassCode";
 import Configuration from "./components/layoutComponents/Configuration";
+import ClientList from "./components/distributionComponents/clientSelection";
 
 
 export default [
@@ -13,4 +14,5 @@ export default [
     <Route exact path="/Registration"  component={RegistrationForm} noLayout />,
     <Route exact path="/confirmation"  component={ConfirmPassCode} noLayout />,
     <Route exact path="/configuration" component={Configuration}/>,
+    <Route exact path="/sample" component={ClientList}/>,
 ];

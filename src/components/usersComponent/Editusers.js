@@ -31,7 +31,7 @@ export const UserEdit = props => (
         <UsersForm/>
     </Edit>
 );
-const Adminauth = ()=>{
+const AdminAuth = ()=>{
     const permission = usePermissions()
     const translate = useTranslate()
     return(
@@ -155,7 +155,7 @@ const UsersForm=(props)=>{
                                         </ArrayInput>
                                     </Box>
                                 </Box>
-                                    <Adminauth/>
+                                    <AdminAuth/>
                             </Box>
                         </CardContent>
                         <Toolbar>

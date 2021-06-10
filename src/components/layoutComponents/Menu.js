@@ -7,6 +7,7 @@ import DirectionsBoatIcon from '@material-ui/icons/DirectionsBoat';
 import PeopleAltTwoToneIcon from '@material-ui/icons/PeopleAltTwoTone';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ContactMailIcon from '@material-ui/icons/ContactMail';
+import ShareIcon from '@material-ui/icons/Share';
 import { usePermissions } from 'react-admin';
 import { Box} from '@material-ui/core';
 import { useTranslate } from 'react-admin';
@@ -18,6 +19,7 @@ const Menu =()=>{
     const translate = useTranslate()
     //console.log(permission.permissions)//checking authorisations
     let identifier = localStorage.getItem("identification")
+
     return (
         <Box>
             <DashboardMenuItem />
@@ -58,6 +60,13 @@ const Menu =()=>{
                     to={"/shipmentmanagement/shipments"}
                     primaryText={translate("dashboard.shipments")}
                     leftIcon={<DirectionsBoatIcon/>}
+                />
+            }
+            {
+                <MenuItemLink
+                    to={"/sample"}
+                    primaryText={translate("dashboard.distribution")}
+                    leftIcon={<ShareIcon/>}
                 />
             }
         </Box>

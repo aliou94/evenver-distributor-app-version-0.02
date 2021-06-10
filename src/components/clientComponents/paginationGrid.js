@@ -13,7 +13,9 @@ function loadServerRows(page, invoice) {
 
 
 
-export default function ServerPaginationGrid(props) {
+export default function
+
+    ServerPaginationGrid(props) {
 
     let [Page, setPage] = React.useState(1);
     let [End, setEnd] = React.useState(5);
@@ -22,6 +24,7 @@ export default function ServerPaginationGrid(props) {
     let identifier = props.identifier;
     let notify = useNotify();
     let translate = useTranslate();
+
     const handlePageChange = (params) => {
         setPage(params.page)
         setStart((params.page - 1) * 5)
@@ -41,8 +44,8 @@ export default function ServerPaginationGrid(props) {
         });
         fetch(request)
             .then((res)=>{
-              let  totalPages = parseFloat(res.headers.get('X-Total-Count'))
-                console.log(totalPages)
+              //let  totalPages = parseFloat(res.headers.get('X-Total-Count'))
+                //console.log(totalPages)
                 return(
                     res.json()
                 )
@@ -64,7 +67,7 @@ export default function ServerPaginationGrid(props) {
                     return invoiceArray
                 })
                 setRows(()=>Invoices)
-                console.log(Invoices)
+               // console.log(Invoices)
             }).catch(error => {
             notify(error)
         })

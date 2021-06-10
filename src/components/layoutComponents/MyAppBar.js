@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { forwardRef } from 'react';
-import { AppBar, UserMenu, MenuItemLink, useTranslate } from 'react-admin';
+import {forwardRef} from 'react';
+import {AppBar, UserMenu, MenuItemLink, useTranslate} from 'react-admin';
 import Typography from '@material-ui/core/Typography';
 import SettingsIcon from '@material-ui/icons/Settings';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import Logo from './Logo';
 
@@ -26,7 +26,7 @@ const ConfigurationMenu = forwardRef((props, ref) => {
             ref={ref}
             to="/configuration"
             primaryText={translate('help.configuration')}
-            leftIcon={<SettingsIcon />}
+            leftIcon={<SettingsIcon/>}
             onClick={props.onClick}
             sidebarIsOpen
         />
@@ -35,7 +35,7 @@ const ConfigurationMenu = forwardRef((props, ref) => {
 
 const CustomUserMenu = (props) => (
     <UserMenu {...props}>
-        <ConfigurationMenu />
+        <ConfigurationMenu/>
     </UserMenu>
 );
 
@@ -49,8 +49,8 @@ const CustomAppBar = (props) => {
                 className={classes.title}
                 id="react-admin-title"
             />
-            <Logo />
-            <span className={classes.spacer} />
+            <Logo/>
+            <span className={classes.spacer}/>
         </AppBar>
     );
 };

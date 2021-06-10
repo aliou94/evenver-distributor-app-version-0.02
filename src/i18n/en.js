@@ -21,11 +21,12 @@ const customEnglishMessages = {
         welcome:"This is an app designed for Siruis Company It intends to improve the repartition" +
             " of goods according to the available credit of customers",
         profile:"My profile",
-        clients:"clients",
-        users:"users",
-        welcomeM:"welcome to the even distributor app",
-        merchandise:"merchandise",
-        shipments:"shipments"
+        clients:"Clients",
+        users:"Users",
+        welcomeM:"Welcome to the even distributor app",
+        merchandise:"Merchandise",
+        shipments:"Shipments",
+        distribution:"Distribution"
     },
         auth:{
             email:'Email',
