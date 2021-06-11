@@ -6,9 +6,10 @@ import {useEffect, useState} from "react";
 import {useNotify} from "ra-core";
 import {Box, Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import MerchandiseSelection from "./merchandiseSelection";
 
-
-let flag = false
+// should be on false
+let flag = true
 
 const useStyles = makeStyles({
     root: {
@@ -171,6 +172,7 @@ const ClientList = () => {
 
     return (
         <div style={{height: 200, width: '70%'}} className={classes.root}>
+
             <div style={{display: !flag ? "inline" : "none"}}>
                 <Box flex={2} mr={{md: 0, lg: '1em'}}>
                     <Typography variant="h6" gutterBottom>
@@ -198,16 +200,6 @@ const ClientList = () => {
 
             <br/>
 
-            <div style={{display: flag ? "inline" : "none"}}>
-                <Box flex={2} mr={{md: 0, lg: '1em'}}>
-                    <Typography variant="h6" gutterBottom>
-                        Select Repartition Mode
-                    </Typography>
-                </Box>
-
-
-            </div>
-
             <Box flex={2} mr={{md: 0, lg: '1em'}}>
                 <Typography variant="h6" gutterBottom>
                     Validate Applicable Credit
@@ -224,6 +216,7 @@ const ClientList = () => {
                     return SelectedRows[indexOfUpdate].applicableCredit = +params.props.value
                 }}
             />
+
             <br/>
             <Button variant="contained" color="primary" onClick={() => {
                 let checkBalance = customerInfo =>
@@ -237,6 +230,18 @@ const ClientList = () => {
             >
                 {Instructions}
             </Button>
+
+            <br/>
+            <br/>
+
+            <div style={{display: flag ? "inline" : "none"}}>
+                <Box flex={2} mr={{md: 0, lg: '1em'}}>
+                    <Typography variant="h6" gutterBottom>
+                        Merchandise selection
+                    </Typography>
+                </Box>
+                <MerchandiseSelection/>
+            </div>
 
         </div>
     )

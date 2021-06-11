@@ -130,7 +130,6 @@ const MerchandiseStockValidationForm = () => {
             <ReferenceInput source="merchandise.merchandise.category" reference="merchandisemanagement/merchandise"
                             label={translate("help.select")}>
                 <SelectInput source="category" optionValue="category" optionText={(record) => {
-                    //idRecord = record.id
 
                     merchandiseIdentification.push(record)
                     if (values.merchandise) generateID(merchandiseIdentification, values.merchandise.merchandise.category)
