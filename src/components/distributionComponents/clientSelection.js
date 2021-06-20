@@ -9,7 +9,7 @@ import Button from "@material-ui/core/Button";
 import MerchandiseSelection from "./merchandiseSelection";
 
 // should be on false
-let flag = true
+let flag = false
 
 const useStyles = makeStyles({
     root: {
@@ -27,6 +27,8 @@ const useStyles = makeStyles({
 
 
 const ClientList = () => {
+
+
 
     let [SelectionRows, setSelectionRows] = useState([])
 
@@ -115,7 +117,7 @@ const ClientList = () => {
              notify(`insufficient balance for customer :  ${customerInfo.firstName}, edit amount of applicable credit`)
          }
          else {
-             notify(`enter a valid amount of applicable credit for customer : 
+             notify(`enter a valid amount of applicable credit for customer :
                 ${customerInfo.firstName}`)
          }
 
@@ -151,14 +153,12 @@ const ClientList = () => {
                 }
 
                 let clientInfo = response.map((data) => {
-
                     let customerDatabase = {}
                     customerDatabase.id = data.id
                     customerDatabase.firstName = data.firstName
                     customerDatabase.lastName = data.lastName
                     customerDatabase.applicableCredit = data.acceptedCredit[0].value
                     customerDatabase.credit = data.acceptedCredit[0].value
-                    customerDatabase.status = "open"
                     return customerDatabase
                 })
                 //   console.log(clientInfo)

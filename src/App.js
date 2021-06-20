@@ -91,7 +91,8 @@ const App = () =>
             <Resource
                 name="shipmentmanagement/shipments"
                 list={ShipmentList}
-            />
+            />,
+
         ]}
     </Admin>
 

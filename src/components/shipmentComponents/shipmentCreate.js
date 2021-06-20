@@ -1,18 +1,27 @@
 import React, {useCallback, useState} from 'react'
+
 import {
     ReferenceInput, SelectInput,
     Create, SimpleForm, TextInput, NumberInput,
     SaveButton
 } from 'react-admin';
+
 import RichTextInput from 'ra-input-rich-text';
+
 import {useFormState, useForm} from 'react-final-form';
+
 import {Button} from '@material-ui/core';
+
 import {DataGrid} from '@material-ui/data-grid'
+
 import ConfirmationDialogRaw from "./dialogueBox";
+
 import {useTranslate} from 'ra-core';
 
 let isOpen = false
+
 let currentEntry, newEntry, duplicatedItem, duplicateIndex, revisedDataMerchandise, shipmentIdentification
+
 let merchandiseIdentification = []
 
 
@@ -47,9 +56,11 @@ const MerchandiseDataGrid = (props) => {
 }
 
 const MerchandiseStockValidationForm = () => {
+
     const translate = useTranslate()
     const form = useForm()
     const {values} = useFormState()
+
     const [MerchandiseData, setCount] = useState([])
     const [option, setOption] = useState("cancel")
     let [open, setOpen] = useState(true)
