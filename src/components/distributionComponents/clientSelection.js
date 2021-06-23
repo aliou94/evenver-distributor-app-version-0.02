@@ -9,7 +9,7 @@ import Button from "@material-ui/core/Button";
 import MerchandiseSelection from "./merchandiseSelection";
 
 // should be on false
-let flag = false
+// let flag = false
 
 const useStyles = makeStyles({
     root: {
@@ -28,6 +28,7 @@ const useStyles = makeStyles({
 
 const ClientList = () => {
 
+    let [Flag, setFlag] = useState(false)
 
 
     let [SelectionRows, setSelectionRows] = useState([])
@@ -87,7 +88,7 @@ const ClientList = () => {
             // editable: true,
             width: 190,
             cellClassName: (params) => {
-                if (params) params.isEditable = !flag
+                if (params) params.isEditable = !Flag
                 // console.log(params)
                 return clsx('super-app', {
                     negative: params.value > params.row.credit,
@@ -105,8 +106,8 @@ const ClientList = () => {
     let notify = useNotify();
 
     let validate = () => {
-        flag = !flag
-        !flag ? setInstructions("VALIDATE CLIENT") : setInstructions("UPDATE CLIENT")
+        setFlag(!Flag)
+        !Flag ? setInstructions("VALIDATE CLIENT") : setInstructions("UPDATE CLIENT")
     }
 
     let error = (customerInfos) => {
@@ -173,7 +174,7 @@ const ClientList = () => {
     return (
         <div style={{height: 200, width: '70%'}} className={classes.root}>
 
-            <div style={{display: !flag ? "inline" : "none"}}>
+            <div style={{display: !Flag  ? "inline" : "none"}}>
                 <Box flex={2} mr={{md: 0, lg: '1em'}}>
                     <Typography variant="h6" gutterBottom>
                         Select Customers
@@ -186,10 +187,7 @@ const ClientList = () => {
                     pageSize={5}
                     checkboxSelection
                     onSelectionModelChange={(row) => {
-
                         let checkSelection = (customerInfo) => row.selectionModel.includes(customerInfo.id)
-
-
                         return (
                             setSelectedRows(() => SelectionRows.filter(checkSelection)),
                                 setSelectionRows(SelectionRows)
@@ -234,7 +232,7 @@ const ClientList = () => {
             <br/>
             <br/>
 
-            <div style={{display: flag ? "inline" : "none"}}>
+            <div style={{display: Flag ? "inline" : "none"}}>
                 <Box flex={2} mr={{md: 0, lg: '1em'}}>
                     <Typography variant="h6" gutterBottom>
                         Merchandise selection

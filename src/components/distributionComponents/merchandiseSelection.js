@@ -6,7 +6,7 @@ import {
     Datagrid, TextField
 } from 'react-admin';
 import {makeStyles} from '@material-ui/styles';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import clsx from "clsx";
 
@@ -28,47 +28,48 @@ const useStyles = makeStyles({
 const Columns = [
 
     {
-        field:'category',
-        headerName:'Merchanidise',
+        field: 'category',
+        headerName: 'Merchanidise',
         width: 160,
+        editable: false,
         cellClassName: (params) => {
             // console.log(params)
             return clsx('super-app', {
                 negative: params.row.approvedDistribution > params.row.quantity,
-                positive: params.row.approvedDistribution  <= params.row.quantity,
+                positive: params.row.approvedDistribution <= params.row.quantity,
             })
         }
     },
 
     {
-        field:'quantity', headerName:'Quantity', width: 100,
+        field: 'quantity', headerName: 'Quantity',
+        width: 100,
+        editable: false,
         cellClassName: (params) => {
             // console.log(params)
             return clsx('super-app', {
                 negative: params.row.approvedDistribution > params.row.quantity,
-                positive: params.row.approvedDistribution  <= params.row.quantity,
+                positive: params.row.approvedDistribution <= params.row.quantity,
             })
         }
     },
 
     {
         field: 'approvedDistribution',
-        headerName: 'Approved Distribution',
+        headerName: 'Edit Approved Distribution',
         editable: true,
-        width: 190,
+        width: 150,
         cellClassName: (params) => {
             // console.log(params)
             return clsx('super-app', {
                 negative: params.row.approvedDistribution > params.row.quantity,
-                positive: params.row.approvedDistribution  <= params.row.quantity,
+                positive: params.row.approvedDistribution <= params.row.quantity,
             })
         }
 
     },
 
 ];
-
-
 
 
 const RepartitioningMode = ({handleRepartitionMode}) => {
@@ -91,37 +92,70 @@ const RepartitioningMode = ({handleRepartitionMode}) => {
     )
 }
 
-const MerchandiseDatagrid = ({merchandiseData, identifier})=>{
+const MerchandiseDatagrid = ({identifier}) => {
 
-    let row = []
+
+    let [Row, setRow] = useState([])
     const classes = useStyles();
 
-if(merchandiseData && identifier){
-    let sortSelectedData = (merchandiseInfo) => merchandiseInfo.shipmentNumber === identifier
-     let selectedData = merchandiseData.filter(sortSelectedData)[0]
+    useEffect(() => {
+        setRow([])
+        const token = localStorage.getItem('authentication');
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json')
+        headers.append('Authorization', token)
+        const request = new Request
 
-  if(selectedData){
-      let merchandiseInfo = selectedData.merchandise.map((data)=>{
-          let dataInfo = {}
-          dataInfo.id = data.merchandise.id
-          dataInfo.category = data.merchandise.category
-          dataInfo.quantity = data.quantity.count
-          return dataInfo
-      })
-       row = merchandiseInfo
-      // console.log(row)
-  }
+        (`http://localhost:8080/evendistributor/shipmentmanagement/shipments/${identifier}`, {
+            method: 'GET',
+            headers: headers
+        });
 
-}
-    return(
-        <div style={{height: 400, width: '150%'}} >
+        fetch(request)
+            .then((res) => {
+                return (
+                    res.json()
+                )
+            })
+            .then((response) => {
+
+
+
+                if (response.status < 200 || response.status >= 300) {
+                    //  throw new Error(response.statusText);
+                    return;
+                }
+
+                let merchandiseInfo = response.merchandise.map((data) => {
+                    let dataInfo = {}
+                    dataInfo.id = data.merchandise.id
+                    dataInfo.category = data.merchandise.category
+                    dataInfo.quantity = data.quantity.count
+                    return dataInfo
+                })
+                  // console.log(merchandiseInfo)
+                   setRow(merchandiseInfo)
+                // console.log(Row)
+
+                // setSelectionRows(clientInfo)
+            }).catch(error => {
+              console.log(error)
+        })
+
+    }, [identifier])
+
+
+    return (
+        <div style={{height: 400, width: '150%'}}>
             <DataGrid
                 className={classes.root}
-                rows={row}
+                rows={Row}
                 columns={Columns}
                 pageSize={5}
                 onEditCellChangeCommitted={(params) => {
-                  console.log(params)
+                     let checkUpdate = (clientInfo) => params.id === clientInfo.id
+                     let indexOfUpdate = Row.indexOf(Row.filter(checkUpdate)[0])
+                     return Row[indexOfUpdate].approvedDistribution = +params.props.value
                 }}
             />
         </div>
@@ -130,10 +164,8 @@ if(merchandiseData && identifier){
 
 const MerchandiseSelector = ({repartitionMode}) => {
 
-    let merchandiseData = []
-    let Rows = []
 
-    let [ShipmentSelected , setShipmentSelected ] = useState([])
+    let [ShipmentSelected, setShipmentSelected] = useState([])
 
 
     return (
@@ -144,52 +176,28 @@ const MerchandiseSelector = ({repartitionMode}) => {
                 <ReferenceInput source="bolNumber" reference="shipmentmanagement/shipments"
                                 label="select shipment">
                     <SelectInput
-
                         source="shipmentNumber"
-
                         optionValue="shipmentNumber"
-
 
                         format={v => {
                             //init  user selection
                             // ShipmentSelected.push(v)
                             setShipmentSelected(v)
-
                             return v
                         }}
 
                         optionText={(record) => {
-
-
-                            merchandiseData.push(record)
-                            merchandiseData.concat(record)
-
-
-
-                            //   console.log(selectedData.merchandise)
-
-                            // if (repartitionMode === "Shipment" && selectedData) {
-                            //
-
-
-                            //we want to make a distiction at this point  btn what the merchandise data should be
-                            //we have two cases one: where repMode===shipment and the other where repMode = totalStock
-
-
                             return `${record.shipmentNumber}`
                         }}/>
                 </ReferenceInput>
-
             </div>
-            <MerchandiseDatagrid merchandiseData={merchandiseData} identifier={ShipmentSelected}/>
+            <MerchandiseDatagrid identifier={ShipmentSelected}/>
         </div>
     )
 }
 
 
-
-
-export const PostEdit = () => {
+export const MerchandiseSelection = () => {
 
     let [RepartitionMode, setRepartitionMode] = useState("")
 
@@ -207,16 +215,6 @@ export const PostEdit = () => {
         </TabbedForm>
 
     );
-}
-
-const MerchandiseSelection = () => {
-    return (
-        <div>
-            <PostEdit/>
-        </div>
-    )
-
-
 }
 
 

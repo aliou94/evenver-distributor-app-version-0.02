@@ -214,7 +214,7 @@ const InvoiceData = () => {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', token);
-        console.log("The identifier: " + identifier);
+         console.log("The identifier: " + identifier);
 
         const request
             = new Request(`http://localhost:8080/evendistributor/clientmanagement/clients/${identifier}/credits`,
@@ -279,7 +279,7 @@ const InvoiceData = () => {
                     field: 'deposits',
                     headerName: 'validation',
                     renderCell: (params) => {
-                        // console.log(params.row.status)
+                         console.log(params.row.status)
                         if (params.row.status === "En attente" || params.row.status === "pending") {
                             return (
                                 <Button
@@ -305,6 +305,7 @@ const InvoiceData = () => {
                                     size="medium"
                                     onClick={() => {
                                         return (
+
                                             Validate(ClientInvoice)
                                         )
                                     }}
