@@ -39,7 +39,13 @@ const useStyles = makeStyles({
 
 
 
-const MerchandiseSelectionToolbar = ({ShipmentSelected, MerchandiseRepatition}) => {
+const MerchandiseSelectionToolbar = ({
+                                         ShipmentSelected,
+                                         MerchandiseRepatition,
+                                         EnableCalculate,
+                                         handleAnabel,
+                                         handleInstruction,
+                                         Instruction}) => {
 
 
     const useStyles = makeStyles({
@@ -49,22 +55,17 @@ const MerchandiseSelectionToolbar = ({ShipmentSelected, MerchandiseRepatition}) 
         },
     });
 
-    const [Instruction, setInstructions] = useState("Validate Selection")
-     const [Disable, setDisable] = useState(true)
 
-    let handleDisabiity = ()=> {
-       ! Disable ? setInstructions("Validate  Selection") : setInstructions("Update Selection")
-        setDisable (!Disable)
 
+
+    let handleDisability = ()=> {
+        // console.log(EnableCalculate)
+        !EnableCalculate ? handleInstruction ("Validate  Selection") : handleInstruction ("Update Selection")
+        handleAnabel(!EnableCalculate)
 
      }
 
 
-
-
-
-  // console.log(Row.filter((merchandiseInfo)=>!merchandiseInfo.applicableCredit).length)
-    console.log(ShipmentSelected)
 
     return(
         <Toolbar  classes={useStyles()} >
@@ -78,13 +79,13 @@ const MerchandiseSelectionToolbar = ({ShipmentSelected, MerchandiseRepatition}) 
                      || merchandiseInfo.approvedDistribution <=0
                      || merchandiseInfo.approvedDistribution === undefined
 
-                    MerchandiseRepatition.filter(checkStock).length===0 ? handleDisabiity (): console.log("error")
+                    MerchandiseRepatition.filter(checkStock).length===0 ? handleDisability (): console.log("error")
                 }}
             >
                 {Instruction}
             </Button>
 
-            <Button variant="contained" color="primary" disabled={Disable}>
+            <Button variant="contained" color="primary" disabled={EnableCalculate}>
                 Calculate
             </Button>
         </Toolbar>
@@ -114,7 +115,7 @@ const RepartitioningMode = ({handleRepartitionMode}) => {
 
 
 
-const MerchandiseDatagrid = ({identifier, Row, setRow}) => {
+const MerchandiseDatagrid = ({identifier, Row, setRow,  EnableCalculate, handleInstruction}) => {
 
     const classes = useStyles();
 
@@ -150,10 +151,11 @@ const MerchandiseDatagrid = ({identifier, Row, setRow}) => {
         {
             field: 'approvedDistribution',
             headerName: 'Edit Approved Distribution',
-            editable: true,
+            // editable: true,
             width: 150,
             cellClassName: (params) => {
                 // console.log(params)
+                if (params) params.isEditable = EnableCalculate
                 return clsx('super-app', {
                     negative: params.row.approvedDistribution > params.row.quantity,
                     positive: params.row.approvedDistribution <= params.row.quantity,
@@ -164,8 +166,11 @@ const MerchandiseDatagrid = ({identifier, Row, setRow}) => {
 
     ];
 
+
+
     useEffect(() => {
         setRow([])
+        handleInstruction("Validate merchandise")
         const token = localStorage.getItem('authentication');
         let headers = new Headers();
         headers.append('Content-Type', 'application/json')
@@ -218,6 +223,7 @@ const MerchandiseDatagrid = ({identifier, Row, setRow}) => {
                 columns={Columns}
                 pageSize={5}
                 onEditCellChangeCommitted={(params) => {
+
                      let checkUpdate = (clientInfo) => params.id === clientInfo.id
                      let indexOfUpdate = Row.indexOf(Row.filter(checkUpdate)[0])
                     Row[indexOfUpdate].approvedDistribution = +params.props.value
@@ -230,10 +236,17 @@ const MerchandiseDatagrid = ({identifier, Row, setRow}) => {
     )
 }
 
-const ShipmentSelector = ({repartitionMode, handleRow, Row , ShipmentSelected, handleSelection }) => {
+const ShipmentSelector = ({repartitionMode,
+                              handleRow,
+                              Row ,
+                              ShipmentSelected,
+                              handleSelection,
+                              EnableCalculate,
+                              handleInstruction
+                          }) => {
 
 
-    //let [ShipmentSelected, setShipmentSelected] = useState([])
+
 
 
     return (
@@ -260,7 +273,13 @@ const ShipmentSelector = ({repartitionMode, handleRow, Row , ShipmentSelected, h
                 </ReferenceInput>
             </div>
 
-            <MerchandiseDatagrid identifier={ShipmentSelected} Row ={Row} setRow={handleRow}/>
+            <MerchandiseDatagrid
+                identifier={ShipmentSelected}
+                Row ={Row}
+                setRow={handleRow}
+                EnableCalculate={EnableCalculate}
+                handleInstruction={handleInstruction }
+            />
 
 
         </div>
@@ -276,17 +295,29 @@ export const MerchandiseSelection = () => {
 
     let [ShipmentSelected, setShipmentSelected] = useState([])
 
+    let [EnableCalculate, setEnableCalculate] = useState(true)
+
+    const [Instruction, setInstructions] = useState("Validate Selection")
+
     let [Row, setRow] = useState([])
 
-    const handleRow = (values)=> setRow(values)
+    const handleRow = (values)=>  setRow(values)
+
+    const handleAnabel = (values)=>  setEnableCalculate(values)
 
     const handleSelection = (values)=> setShipmentSelected(values)
+
+    const handleInstruction = (values)=> setInstructions(values)
 
     return (
 
         <TabbedForm syncWithLocation={false} toolbar={<MerchandiseSelectionToolbar
             ShipmentSelected={ShipmentSelected}
             MerchandiseRepatition={Row}
+            EnableCalculate={EnableCalculate}
+            Instruction={Instruction}
+            handleAnabel={handleAnabel}
+            handleInstruction={handleInstruction }
         />}>
             <FormTab label="select repartition mode">
                 <RepartitioningMode handleRepartitionMode={setRepartitionMode}/>
@@ -299,6 +330,8 @@ export const MerchandiseSelection = () => {
                     Row={Row}
                     handleSelection={handleSelection}
                     ShipmentSelected={ShipmentSelected}
+                    EnableCalculate={EnableCalculate}
+                    handleInstruction={handleInstruction }
                 />
             </FormTab>
 
