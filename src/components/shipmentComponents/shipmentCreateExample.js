@@ -20,7 +20,7 @@ const SaveButtoun = (props)=>(
 
 const ShipmentExample= (props)  => {
     let permissions = localStorage.getItem("fullName")
-    console.log(permissions)
+    // console.log(permissions)
 
     const divStyle = {
         display: 'none',

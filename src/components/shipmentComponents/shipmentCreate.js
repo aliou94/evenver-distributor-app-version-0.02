@@ -65,7 +65,6 @@ const MerchandiseStockValidationForm = () => {
     const [option, setOption] = useState("cancel")
     let [open, setOpen] = useState(true)
 
-
     const resetForm = useCallback(() => {
         form.change('merchandise.merchandise.category', null);
         form.change('merchandise.quantity.count', null);

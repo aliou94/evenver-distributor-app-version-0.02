@@ -26,10 +26,11 @@ const useStyles = makeStyles({
 });
 
 
+
+
 const ClientList = () => {
 
     let [Flag, setFlag] = useState(false)
-
 
     let [SelectionRows, setSelectionRows] = useState([])
 
@@ -107,7 +108,7 @@ const ClientList = () => {
 
     let validate = () => {
         setFlag(!Flag)
-        !Flag ? setInstructions("VALIDATE CLIENT") : setInstructions("UPDATE CLIENT")
+        Flag ? setInstructions("VALIDATE CLIENT") : setInstructions("UPDATE CLIENT")
     }
 
     let error = (customerInfos) => {
@@ -240,9 +241,14 @@ const ClientList = () => {
                 </Box>
                 <MerchandiseSelection/>
             </div>
+<br/>
+
 
         </div>
     )
 };
+
+
+
 
 export default ClientList

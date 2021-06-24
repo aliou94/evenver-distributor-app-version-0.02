@@ -3,12 +3,13 @@ import {
     TabbedForm,
     FormTab,
     SelectInput, ReferenceInput,
-    Datagrid, TextField
+    Datagrid, Toolbar
 } from 'react-admin';
 import {makeStyles} from '@material-ui/styles';
 import {useEffect, useState} from "react";
 import {DataGrid} from "@material-ui/data-grid";
 import clsx from "clsx";
+import Button from "@material-ui/core/Button";
 
 
 const useStyles = makeStyles({
@@ -22,8 +23,14 @@ const useStyles = makeStyles({
             color: 'white',
 
         },
+        toolbar: {
+            display: 'flex',
+            justifyContent: 'space-between',
+        },
     },
 });
+
+
 
 const Columns = [
 
@@ -71,6 +78,26 @@ const Columns = [
 
 ];
 
+const MerchandiseSelectionToolbar = props => {
+    const useStyles = makeStyles({
+        toolbar: {
+            display: 'flex',
+            justifyContent: 'space-between',
+        },
+    });
+    return(
+        <Toolbar {...props}  classes={useStyles()} >
+            <Button variant="contained" color="primary" disabled>
+                validate
+            </Button>
+
+            <Button variant="contained" color="primary" disabled>
+                Calculate
+            </Button>
+        </Toolbar>
+    )
+}
+
 
 const RepartitioningMode = ({handleRepartitionMode}) => {
 
@@ -96,6 +123,7 @@ const MerchandiseDatagrid = ({identifier}) => {
 
 
     let [Row, setRow] = useState([])
+
     const classes = useStyles();
 
     useEffect(() => {
@@ -158,6 +186,8 @@ const MerchandiseDatagrid = ({identifier}) => {
                      return Row[indexOfUpdate].approvedDistribution = +params.props.value
                 }}
             />
+
+            <br/>
         </div>
     )
 }
@@ -197,13 +227,16 @@ const MerchandiseSelector = ({repartitionMode}) => {
 }
 
 
+
+
+
 export const MerchandiseSelection = () => {
 
     let [RepartitionMode, setRepartitionMode] = useState("")
 
     return (
 
-        <TabbedForm syncWithLocation={false}>
+        <TabbedForm syncWithLocation={false} toolbar={<MerchandiseSelectionToolbar />}>
             <FormTab label="select repartition mode">
                 <RepartitioningMode handleRepartitionMode={setRepartitionMode}/>
             </FormTab>
