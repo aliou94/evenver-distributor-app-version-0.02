@@ -3,7 +3,7 @@ import {
     TabbedForm,
     FormTab,
     SelectInput, ReferenceInput,
-    Datagrid, Toolbar
+    Datagrid, Toolbar, SaveButton
 } from 'react-admin';
 import {makeStyles} from '@material-ui/styles';
 import {useEffect, useState} from "react";
@@ -32,66 +32,59 @@ const useStyles = makeStyles({
 
 
 
-const Columns = [
 
-    {
-        field: 'category',
-        headerName: 'Merchanidise',
-        width: 160,
-        editable: false,
-        cellClassName: (params) => {
-            // console.log(params)
-            return clsx('super-app', {
-                negative: params.row.approvedDistribution > params.row.quantity,
-                positive: params.row.approvedDistribution <= params.row.quantity,
-            })
-        }
-    },
 
-    {
-        field: 'quantity', headerName: 'Quantity',
-        width: 100,
-        editable: false,
-        cellClassName: (params) => {
-            // console.log(params)
-            return clsx('super-app', {
-                negative: params.row.approvedDistribution > params.row.quantity,
-                positive: params.row.approvedDistribution <= params.row.quantity,
-            })
-        }
-    },
 
-    {
-        field: 'approvedDistribution',
-        headerName: 'Edit Approved Distribution',
-        editable: true,
-        width: 150,
-        cellClassName: (params) => {
-            // console.log(params)
-            return clsx('super-app', {
-                negative: params.row.approvedDistribution > params.row.quantity,
-                positive: params.row.approvedDistribution <= params.row.quantity,
-            })
-        }
 
-    },
 
-];
 
-const MerchandiseSelectionToolbar = props => {
+
+const MerchandiseSelectionToolbar = ({ShipmentSelected, MerchandiseRepatition}) => {
+
+
     const useStyles = makeStyles({
         toolbar: {
             display: 'flex',
             justifyContent: 'space-between',
         },
     });
+
+    const [Instruction, setInstructions] = useState("Validate Selection")
+     const [Disable, setDisable] = useState(true)
+
+    let handleDisabiity = ()=> {
+       ! Disable ? setInstructions("Validate  Selection") : setInstructions("Update Selection")
+        setDisable (!Disable)
+
+
+     }
+
+
+
+
+
+  // console.log(Row.filter((merchandiseInfo)=>!merchandiseInfo.applicableCredit).length)
+    console.log(ShipmentSelected)
+
     return(
-        <Toolbar {...props}  classes={useStyles()} >
-            <Button variant="contained" color="primary" disabled>
-                validate
+        <Toolbar  classes={useStyles()} >
+            <Button
+                variant="contained"
+                color="primary"
+                 disabled={!ShipmentSelected}
+                onClick={()=>{
+                  let  checkStock = (merchandiseInfo)=>
+                      merchandiseInfo.approvedDistribution > merchandiseInfo.quantity
+                     || merchandiseInfo.approvedDistribution <=0
+                     || merchandiseInfo.approvedDistribution === undefined
+
+                    MerchandiseRepatition.filter(checkStock).length===0 ? handleDisabiity (): console.log("error")
+                }}
+            >
+                {Instruction}
             </Button>
 
-            <Button variant="contained" color="primary" disabled>
+            <Button variant="contained" color="primary" disabled={Disable}>
                 Calculate
             </Button>
         </Toolbar>
@@ -119,12 +112,57 @@ const RepartitioningMode = ({handleRepartitionMode}) => {
     )
 }
 
-const MerchandiseDatagrid = ({identifier}) => {
 
 
-    let [Row, setRow] = useState([])
+const MerchandiseDatagrid = ({identifier, Row, setRow}) => {
 
     const classes = useStyles();
+
+    const Columns = [
+
+        {
+            field: 'category',
+            headerName: 'Merchanidise',
+            width: 160,
+            editable: false,
+            cellClassName: (params) => {
+                // console.log(params)
+                return clsx('super-app', {
+                    negative: params.row.approvedDistribution > params.row.quantity,
+                    positive: params.row.approvedDistribution <= params.row.quantity,
+                })
+            }
+        },
+
+        {
+            field: 'quantity', headerName: 'Quantity',
+            width: 100,
+            editable: false,
+            cellClassName: (params) => {
+                // console.log(params)
+                return clsx('super-app', {
+                    negative: params.row.approvedDistribution > params.row.quantity,
+                    positive: params.row.approvedDistribution <= params.row.quantity,
+                })
+            }
+        },
+
+        {
+            field: 'approvedDistribution',
+            headerName: 'Edit Approved Distribution',
+            editable: true,
+            width: 150,
+            cellClassName: (params) => {
+                // console.log(params)
+                return clsx('super-app', {
+                    negative: params.row.approvedDistribution > params.row.quantity,
+                    positive: params.row.approvedDistribution <= params.row.quantity,
+                })
+            }
+
+        },
+
+    ];
 
     useEffect(() => {
         setRow([])
@@ -147,8 +185,6 @@ const MerchandiseDatagrid = ({identifier}) => {
             })
             .then((response) => {
 
-
-
                 if (response.status < 200 || response.status >= 300) {
                     //  throw new Error(response.statusText);
                     return;
@@ -159,6 +195,7 @@ const MerchandiseDatagrid = ({identifier}) => {
                     dataInfo.id = data.merchandise.id
                     dataInfo.category = data.merchandise.category
                     dataInfo.quantity = data.quantity.count
+                    dataInfo.approvedDistribution = data.quantity.count
                     return dataInfo
                 })
                   // console.log(merchandiseInfo)
@@ -183,7 +220,8 @@ const MerchandiseDatagrid = ({identifier}) => {
                 onEditCellChangeCommitted={(params) => {
                      let checkUpdate = (clientInfo) => params.id === clientInfo.id
                      let indexOfUpdate = Row.indexOf(Row.filter(checkUpdate)[0])
-                     return Row[indexOfUpdate].approvedDistribution = +params.props.value
+                    Row[indexOfUpdate].approvedDistribution = +params.props.value
+                     return  setRow(Row)
                 }}
             />
 
@@ -192,17 +230,16 @@ const MerchandiseDatagrid = ({identifier}) => {
     )
 }
 
-const MerchandiseSelector = ({repartitionMode}) => {
+const ShipmentSelector = ({repartitionMode, handleRow, Row , ShipmentSelected, handleSelection }) => {
 
 
-    let [ShipmentSelected, setShipmentSelected] = useState([])
+    //let [ShipmentSelected, setShipmentSelected] = useState([])
 
 
     return (
 
         <div>
             <div style={{display: repartitionMode === "Shipment" ? "inline" : "none"}}>
-
                 <ReferenceInput source="bolNumber" reference="shipmentmanagement/shipments"
                                 label="select shipment">
                     <SelectInput
@@ -212,7 +249,8 @@ const MerchandiseSelector = ({repartitionMode}) => {
                         format={v => {
                             //init  user selection
                             // ShipmentSelected.push(v)
-                            setShipmentSelected(v)
+                            // setShipmentSelected(v)
+                            handleSelection(v)
                             return v
                         }}
 
@@ -221,11 +259,13 @@ const MerchandiseSelector = ({repartitionMode}) => {
                         }}/>
                 </ReferenceInput>
             </div>
-            <MerchandiseDatagrid identifier={ShipmentSelected}/>
+
+            <MerchandiseDatagrid identifier={ShipmentSelected} Row ={Row} setRow={handleRow}/>
+
+
         </div>
     )
 }
-
 
 
 
@@ -234,15 +274,32 @@ export const MerchandiseSelection = () => {
 
     let [RepartitionMode, setRepartitionMode] = useState("")
 
+    let [ShipmentSelected, setShipmentSelected] = useState([])
+
+    let [Row, setRow] = useState([])
+
+    const handleRow = (values)=> setRow(values)
+
+    const handleSelection = (values)=> setShipmentSelected(values)
+
     return (
 
-        <TabbedForm syncWithLocation={false} toolbar={<MerchandiseSelectionToolbar />}>
+        <TabbedForm syncWithLocation={false} toolbar={<MerchandiseSelectionToolbar
+            ShipmentSelected={ShipmentSelected}
+            MerchandiseRepatition={Row}
+        />}>
             <FormTab label="select repartition mode">
                 <RepartitioningMode handleRepartitionMode={setRepartitionMode}/>
             </FormTab>
 
             <FormTab label={`select merchandise/${RepartitionMode}`}>
-                < MerchandiseSelector repartitionMode={RepartitionMode}/>
+                < ShipmentSelector
+                    repartitionMode={RepartitionMode}
+                    handleRow = {handleRow}
+                    Row={Row}
+                    handleSelection={handleSelection}
+                    ShipmentSelected={ShipmentSelected}
+                />
             </FormTab>
 
         </TabbedForm>

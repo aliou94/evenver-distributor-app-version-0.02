@@ -239,7 +239,7 @@ const ClientList = () => {
                         Merchandise selection
                     </Typography>
                 </Box>
-                <MerchandiseSelection/>
+                <MerchandiseSelection />
             </div>
 <br/>
 
