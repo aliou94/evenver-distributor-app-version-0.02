@@ -8,7 +8,7 @@ const StockField = ({ record = {}, source }) => {
     const GenerateSum = (stock)=>  sum += stock.quantity.count
     record.merchandise.forEach(GenerateSum)
 
-    console.log(record.merchandise)
+    // console.log(record.merchandise)
   return (
         <div>
             {sum}

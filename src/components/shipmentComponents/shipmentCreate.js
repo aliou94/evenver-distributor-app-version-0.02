@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 
 import {
     ReferenceInput, SelectInput,
@@ -20,7 +20,9 @@ import {useTranslate} from 'ra-core';
 
 let isOpen = false
 
-let currentEntry, newEntry, duplicatedItem, duplicateIndex, revisedDataMerchandise, shipmentIdentification
+let
+    currentEntry, newEntry, duplicatedItem, duplicateIndex, revisedDataMerchandise
+
 
 let merchandiseIdentification = []
 
@@ -64,12 +66,15 @@ const MerchandiseStockValidationForm = () => {
     const [MerchandiseData, setCount] = useState([])
     const [option, setOption] = useState("cancel")
     let [open, setOpen] = useState(true)
+    let [ ShipmentIdentification, setShipmentIdentification] = useState()
 
     const resetForm = useCallback(() => {
         form.change('merchandise.merchandise.category', null);
         form.change('merchandise.quantity.count', null);
         form.change("merchandise.merchandise.id")
     }, [form]);
+
+
 
     const checkForDuplicates = () => {
         let pureArray = []
@@ -123,7 +128,7 @@ const MerchandiseStockValidationForm = () => {
     const generateID = (data, category) => {
         let verifiedObjectIndex = data.findIndex(x => x.category === category)
         console.log(MerchandiseData)
-        if (verifiedObjectIndex >= 0) shipmentIdentification = data[verifiedObjectIndex].id
+        if (verifiedObjectIndex >= 0) setShipmentIdentification(data[verifiedObjectIndex].id)
     }
 
     const handleClose = () => setOpen(false)
@@ -132,8 +137,12 @@ const MerchandiseStockValidationForm = () => {
         setCount(prevState => prevState.concat(values.merchandise))
         MerchandiseData.push(values.merchandise)
         checkForDuplicates()
+        // setShipmentIdentification(null)
         resetForm()
+
     }
+
+
 
     return (
         <>
@@ -152,7 +161,7 @@ const MerchandiseStockValidationForm = () => {
             < NumberInput source="merchandise.quantity.count" label={translate("help.quantity")} parse={v => v}
                           min="0"/>
             {' '}
-            <TextInput source="merchandise.merchandise.id" initialValue={shipmentIdentification}
+            <TextInput source="merchandise.merchandise.id" initialValue={ShipmentIdentification}
                        style={{display: "none"}}/>
             <div>
                 <Button color="secondary"

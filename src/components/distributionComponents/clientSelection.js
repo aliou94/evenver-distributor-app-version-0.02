@@ -1,6 +1,6 @@
 import * as React from "react";
 import {DataGrid} from '@material-ui/data-grid';
-import {makeStyles} from '@material-ui/styles';
+
 import clsx from 'clsx';
 import {useEffect, useState} from "react";
 import {useNotify} from "ra-core";
@@ -8,35 +8,20 @@ import {Box, Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import MerchandiseSelection from "./merchandiseSelection";
 
-// should be on false
-// let flag = false
-
-const useStyles = makeStyles({
-    root: {
-        '& .super-app.negative': {
-            backgroundColor: '#f44336',
-            color: 'white',
-        },
-        '& .super-app.positive': {
-            backgroundColor: '#4791db',
-            color: 'white',
-
-        },
-    },
-});
 
 
 
 
-const ClientList = () => {
 
-    let [Flag, setFlag] = useState(false)
+const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) => {
+
 
     let [SelectionRows, setSelectionRows] = useState([])
 
-    let [SelectedRows, setSelectedRows] = useState([])
+    // let [SelectedRows, setSelectedRows] = useState([])
 
-    let [Instructions, setInstructions] = useState("VALIDATE CLIENT")
+
+     let [Instructions, setInstructions] = useState("VALIDATE CLIENT")
 
     const selectionColumns = [
 
@@ -101,31 +86,28 @@ const ClientList = () => {
 
     ];
 
-    const classes = useStyles();
-
-
     let notify = useNotify();
 
     let validate = () => {
-        setFlag(!Flag)
-        Flag ? setInstructions("VALIDATE CLIENT") : setInstructions("UPDATE CLIENT")
+        handleFlag(!Flag)
+        Flag ?     setInstructions("VALIDATE CLIENT") : setInstructions("UPDATE CLIENT")
     }
 
     let error = (customerInfos) => {
 
-     let alert = (customerInfo) => {
+        let alert = (customerInfo) => {
 
-         if (customerInfo.applicableCredit > customerInfo.credit) {
-             notify(`insufficient balance for customer :  ${customerInfo.firstName}, edit amount of applicable credit`)
-         }
-         else {
-             notify(`enter a valid amount of applicable credit for customer :
+            if (customerInfo.applicableCredit > customerInfo.credit) {
+                notify(`insufficient balance for customer :  ${customerInfo.firstName}, edit amount of applicable credit`)
+            }
+            else {
+                notify(`enter a valid amount of applicable credit for customer :
                 ${customerInfo.firstName}`)
-         }
+            }
 
-     }
+        }
 
-    return  customerInfos.forEach(alert)
+        return  customerInfos.forEach(alert)
     }
 
 
@@ -163,7 +145,7 @@ const ClientList = () => {
                     customerDatabase.credit = data.acceptedCredit[0].value
                     return customerDatabase
                 })
-                //   console.log(clientInfo)
+                  console.log(clientInfo)
                 setSelectionRows(clientInfo)
             }).catch(error => {
             notify(error)
@@ -173,7 +155,7 @@ const ClientList = () => {
 
 
     return (
-        <div style={{height: 200, width: '70%'}} className={classes.root}>
+        <div style={{height:200, width: '100%'}} >
 
             <div style={{display: !Flag  ? "inline" : "none"}}>
                 <Box flex={2} mr={{md: 0, lg: '1em'}}>
@@ -190,7 +172,7 @@ const ClientList = () => {
                     onSelectionModelChange={(row) => {
                         let checkSelection = (customerInfo) => row.selectionModel.includes(customerInfo.id)
                         return (
-                            setSelectedRows(() => SelectionRows.filter(checkSelection)),
+                            handleClient(() => SelectionRows.filter(checkSelection)),
                                 setSelectionRows(SelectionRows)
                         )
                     }}
@@ -206,43 +188,30 @@ const ClientList = () => {
             </Box>
 
             <DataGrid
-                rows={SelectedRows}
+                rows={ClientSelectedRows}
                 columns={selectedColumns}
                 pageSize={5}
                 onEditCellChangeCommitted={(params) => {
                     let checkUpdate = (clientInfo) => params.id === clientInfo.id
-                    let indexOfUpdate = SelectedRows.indexOf(SelectionRows.filter(checkUpdate)[0])
-                    return SelectedRows[indexOfUpdate].applicableCredit = +params.props.value
+                    let indexOfUpdate = ClientSelectedRows.indexOf(SelectionRows.filter(checkUpdate)[0])
+                    return ClientSelectedRows[indexOfUpdate].applicableCredit = +params.props.value
                 }}
             />
 
             <br/>
+
             <Button variant="contained" color="primary" onClick={() => {
                 let checkBalance = customerInfo =>
                     customerInfo.applicableCredit > customerInfo.credit
                     || customerInfo.applicableCredit <= 0
                     || customerInfo.applicableCredit === undefined
 
-                SelectedRows.filter(checkBalance)[0] === undefined ? validate() : error(SelectedRows.filter(checkBalance))
+                ClientSelectedRows.filter(checkBalance)[0] === undefined ? validate() : error(ClientSelectedRows.filter(checkBalance))
             }}
-                    disabled={SelectedRows[0] === undefined}
+                    disabled={ClientSelectedRows[0] === undefined}
             >
                 {Instructions}
             </Button>
-
-            <br/>
-            <br/>
-
-            <div style={{display: Flag ? "inline" : "none"}}>
-                <Box flex={2} mr={{md: 0, lg: '1em'}}>
-                    <Typography variant="h6" gutterBottom>
-                        Merchandise selection
-                    </Typography>
-                </Box>
-                <MerchandiseSelection />
-            </div>
-<br/>
-
 
         </div>
     )
@@ -251,4 +220,4 @@ const ClientList = () => {
 
 
 
-export default ClientList
+export default ClientSelection

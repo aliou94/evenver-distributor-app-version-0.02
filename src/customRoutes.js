@@ -5,7 +5,8 @@ import ResetPassword from "./components/authComponents/resetPassword";
 import RegistrationForm from "./components/authComponents/Registration";
 import ConfirmPassCode from "./components/authComponents/confirmPassCode";
 import Configuration from "./components/layoutComponents/Configuration";
-import ClientList from "./components/distributionComponents/clientSelection";
+import ClientList from "./components/distributionComponents/merchandiseDistribution";
+
 
 
 
