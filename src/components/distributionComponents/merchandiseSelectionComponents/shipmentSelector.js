@@ -24,7 +24,6 @@ const ShipmentSelector = ({
                     <SelectInput
                         source="shipmentNumber"
                         optionValue="shipmentNumber"
-
                         format={v => {
                             //init  user selection
                             // ShipmentSelected.push(v)

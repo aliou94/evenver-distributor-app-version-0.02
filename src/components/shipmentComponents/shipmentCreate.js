@@ -166,7 +166,8 @@ const MerchandiseStockValidationForm = () => {
             <div>
                 <Button color="secondary"
                         disabled={
-                            values.merchandise === undefined || values.merchandise.quantity === undefined || values.merchandise.merchandise === undefined
+                           ! values.merchandise  || !values.merchandise.quantity || !values.merchandise.merchandise
+                            || values.merchandise.merchandise.id === undefined
                         }
                         onClick={AddMerchandise}
                 >

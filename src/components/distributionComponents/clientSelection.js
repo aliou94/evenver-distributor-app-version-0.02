@@ -155,7 +155,7 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
 
 
     return (
-        <div style={{height:200, width: '100%'}} >
+        <div style={{height:400, width: '100%'}} >
 
             <div style={{display: !Flag  ? "inline" : "none"}}>
                 <Box flex={2} mr={{md: 0, lg: '1em'}}>

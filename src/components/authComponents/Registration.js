@@ -3,22 +3,10 @@ import {Field, Form} from 'react-final-form';
 import {makeStyles} from '@material-ui/core/styles';
 import {useTranslate, useNotify} from 'ra-core';
 import {Button, MenuItem, InputLabel, Select, Card, CardActions} from '@material-ui/core';
-import {Notification, required, resolveBrowserLocale} from "react-admin";
+import {Notification, required} from "react-admin";
 import Input from "../../inputComponent";
 import {useState} from "react";
 import LoginForm from "./loginForm";
-import {myRoot} from "../../i18n/en";
-//    import I18n from "I18n-extract";
-import Polyglot from "node-polyglot";
-
-let polyglot = new Polyglot();
-
-
-polyglot.extend({
-    "emailRequired": "email is required how do i translate that to french"
-});
-
-
 
 let useStyles = makeStyles(function (theme) {
     return {
@@ -72,7 +60,7 @@ let Cell = ({type, change}) => {
         <div>
             <div className={classes.input}>
                 <InputLabel id="label">Tel type</InputLabel>
-                <Select labelId="label" id="select" value={type} onChange={change}>
+                <Select labelId="label" id="select" value={type} onChange={change}  name="phoneContacts[0].type">
                     <MenuItem value="cell">{translate('auth.cell')}</MenuItem>
                     <MenuItem value="land">{translate('auth.land')}</MenuItem>
                     <MenuItem value="office">{translate('auth.office')}</MenuItem>
@@ -81,7 +69,7 @@ let Cell = ({type, change}) => {
             <div className={classes.input}>
                 <Field
                     autoFocus
-                    name="cell"
+                    name="phoneContacts[0].number"
                     component={Input}
                     label={translate('auth.phoneNumber')}
                 />
@@ -89,7 +77,7 @@ let Cell = ({type, change}) => {
             <div className={classes.input}>
                 <Field
                     autoFocus
-                    name="operator"
+                    name="phoneContacts[0].provider"
                     component={Input}
                     label='Operator'
                     validate={required(translate('ra.validation.required'))}
@@ -170,10 +158,6 @@ const Options = () => {
 }
 
 
-
-
-
-
 let RegistrationForm = function (props) {
 
     let notify = useNotify();
@@ -210,12 +194,12 @@ let RegistrationForm = function (props) {
         return errors;
     };
 
-function submit({email, userPassword, password, firstName, lastName}) {
+function submit({email, userPassword, password, firstName, lastName,phoneContacts, }) {
 
         if (userPassword === password) {
             const request = new Request(window.encodeURI('http://localhost:8080/evendistributor/usermanagement/users'), {
                 method: 'POST',
-                body: JSON.stringify({email, userPassword, firstName, lastName}),
+                body: JSON.stringify({email, userPassword, firstName, lastName, phoneContacts}),
                 headers: new Headers({'Content-Type': 'application/json'}),
             });
 
@@ -235,79 +219,79 @@ function submit({email, userPassword, password, firstName, lastName}) {
         return <LoginForm/>
     }
 
-    return (
-            <Form onSubmit={submit} validate={validate}
-                  render={(_a) => {
-                      let handleSubmit = _a.handleSubmit;
-                      return (
-                          <form onSubmit={handleSubmit} className={classes.main}>
-                              <Card className={classes.card}>
-                                  <h2 className={classes.a}>~{translate('link.register')}~</h2>
-                                  <p className={classes.a}>{translate('link.register')}</p>
-                                  <div className={classes.form}>
-                                      <div>
-                                          <Field
-                                              autoFocus
-                                              name="firstName"
-                                              component={Input}
-                                              label={translate('auth.firstName')}
-                                          />
-                                      </div>
+return (
+        <Form onSubmit={submit} validate={validate}
+              render={(_a) => {
+                  let handleSubmit = _a.handleSubmit;
+                  return (
+          <form onSubmit={handleSubmit} className={classes.main}>
+              <Card className={classes.card}>
+                  <h2 className={classes.a}>~{translate('link.register')}~</h2>
+                  <p className={classes.a}>{translate('link.register')}</p>
+                  <div className={classes.form}>
+                      <div>
+                          <Field
+                              autoFocus
+                              name="firstName"
+                              component={Input}
+                              label={translate('auth.firstName')}
+                          />
+                      </div>
 
-                                      <div>
-                                          <Field
-                                              autoFocus
-                                              name="lastName"
-                                              component={Input}
-                                              label={translate('auth.lastName')}
-                                          />
-                                      </div>
-                                      <div>
-                                          <Field
-                                              autoFocus
-                                              name="email"
-                                              component={Input}
-                                              label='Email'
-                                          />
-                                      </div>
-                                      <div>
-                                          <Options/>
-                                      </div>
-                                      <div>
-                                          <Field
-                                              autoFocus
-                                              name="userPassword"
-                                              component={Input}
-                                              label={translate('ra.auth.password')}
-                                              type='password'
-                                          />
-                                          <Field
-                                              autoFocus
-                                              name="password"
-                                              component={Input}
-                                              label={translate('auth.confirmPassword')}
-                                              type='password'
-                                          />
-                                      </div>
-                                  </div>
-                                  <CardActions className={classes.actions}>
-                                      <Button
-                                          variant="contained"
-                                          type="submit"
-                                          color="primary"
-                                          fullWidth
-                                      >
-                                          {translate('link.register')}
-                                      </Button>
-                                  </CardActions>
-                                  <Notification/>
-                              </Card>
-                              <div className={classes.a}>{translate('help.sign_in')}<a
-                                  href="#/LoginForm"> {translate("ra.auth.sign_in")}</a></div>
-                          </form>
-                      )
-                  }}/>
-    )
+                      <div>
+                          <Field
+                              autoFocus
+                              name="lastName"
+                              component={Input}
+                              label={translate('auth.lastName')}
+                          />
+                      </div>
+                      <div>
+                          <Field
+                              autoFocus
+                              name="email"
+                              component={Input}
+                              label='Email'
+                          />
+                      </div>
+                      <div>
+                          <Options/>
+                      </div>
+                      <div>
+                          <Field
+                              autoFocus
+                              name="userPassword"
+                              component={Input}
+                              label={translate('ra.auth.password')}
+                              type='password'
+                          />
+                          <Field
+                              autoFocus
+                              name="password"
+                              component={Input}
+                              label={translate('auth.confirmPassword')}
+                              type='password'
+                          />
+                      </div>
+                  </div>
+                  <CardActions className={classes.actions}>
+                      <Button
+                          variant="contained"
+                          type="submit"
+                          color="primary"
+                          fullWidth
+                      >
+                          {translate('link.register')}
+                      </Button>
+                  </CardActions>
+                  <Notification/>
+              </Card>
+              <div className={classes.a}>{translate('help.sign_in')}<a
+                  href="#/LoginForm"> {translate("ra.auth.sign_in")}</a></div>
+          </form>
+      )
+              }}/>
+)
 }
 
 

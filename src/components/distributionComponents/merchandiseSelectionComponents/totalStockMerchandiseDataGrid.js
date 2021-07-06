@@ -86,16 +86,16 @@ const StockMerchandiseDatagrid = ({
         handleRow([])
         handleInstruction("Validate merchandise")
         handleAnabel(true)
-        const token = localStorage.getItem('authentication');
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json')
-        headers.append('Authorization', token)
-        const request = new Request
+            const token = localStorage.getItem('authentication');
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json')
+            headers.append('Authorization', token)
+            const request = new Request
 
-        (`http://localhost:8080/evendistributor/stockmanagment/stocks`, {
-            method: 'GET',
-            headers: headers
-        });
+            (`http://localhost:8080/evendistributor/stockmanagment/stocks`, {
+                method: 'GET',
+                headers: headers
+            });
 
         fetch(request)
             .then((res) => {

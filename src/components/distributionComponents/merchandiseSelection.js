@@ -46,7 +46,7 @@ export const MerchandiseSelection = ({ MerchandiseSelectedRows, handleMerchandis
 
     const handleSelection = (values) => setShipmentSelected(values)
 
-console.log(RepartitionMode)
+// console.log(RepartitionMode)
     return (
        <div>
            <Box flex={2} mr={{md: 0, lg: '1em'}}>

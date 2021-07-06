@@ -1,87 +1,219 @@
 import * as React from "react";
 import {DataGrid} from '@material-ui/data-grid';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {Box, Typography} from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 
 
 
 
-let rows=[
-        { id: 1,
-            customer:"Bakary",
-            Tilapia:8,
-            Caracas: 2,
-            Divers:5,
-            Poison:4,
-            Quantity:19
+
+
+
+
+
+const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
+
+    let clientRequestData = ClientInfo.map(client => {
+        let clientRequest = {
+            "firstName": client.firstName,
+            "id": client.id,
+            "lastName": client.lastName,
+            "purchaseAmount": {
+                "currencyCode": "xof",
+                "value": client.applicableCredit
+            },
+        }
+        return clientRequest
+    })
+
+    let merchandiseRequest = merchandiseInfo.map((merchandise) => {
+        let requestBody = {}
+        requestBody.merchandise ={
+            category: merchandise.category,
+            id:merchandise.id,
+            name:merchandise.name
+        }
+            requestBody.quantity={
+            count: merchandise.approvedDistribution,
+                merchandiseUnit: "box"
+            }
+            return requestBody
+    })
+
+    let [DistributionResponse , setDistributionResponse] = useState([])
+
+    // let [Rows, setRows] = useState([])
+    //
+    // let Rows
+
+
+    useEffect(() => {
+        const token = localStorage.getItem('authentication');
+         // const name = localStorage.getItem('fullName');
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', token);
+        const request
+            = new Request(`http://localhost:8080/evendistributor/merchandisedistribution/calculatedistribution`,
+            {
+                method: 'POST',
+                body: JSON.stringify(
+                    {
+                        "clientDistributions": clientRequestData,
+                        "distributionMode": "STOCK",
+                        "merchandise": merchandiseRequest
+                    }
+    ),
+                headers: headers
+    });
+        return fetch(request)
+            .then(response => {
+                // console.log(response)
+                if (response.status < 200 || response.status >= 300) {
+                    //throw new Error(response.statusText);
+                    return;
+                }
+                return response.json();
+            })
+            .then(distributionResponse => {
+                // status = validateCreditResponse.status
+                setDistributionResponse(distributionResponse)
+            });
+
+
+    }, [merchandiseInfo])
+
+
+    let dynamicColumns = [...merchandiseInfo.map((merchandise) => {
+        return {
+            field: merchandise.category,
+            headerName: merchandise.category,
+            sortable: false,
+            width: 160,
+            editable: true,
+            cellClassName: (params) => {
+                 console.log(params.row)
+            }
+        }
+    })]
+
+
+    let Columns = [
+
+        {
+            field: 'customer',
+            headerName: 'Client',
+            sortable: false,
+            width: 160,
         },
 
-        ]
+
+        ...dynamicColumns,
 
 
-const RepartitionTable = ({ClientInfo, merchandiseInfo})=>{
+        {field: 'quantity',  editable:true, headerName: ' Total received', width: 170},
 
 
- useEffect(()=>{
- },[merchandiseInfo])
-console.log(ClientInfo, merchandiseInfo)
+    ];
 
-let dynamicColumns= [... merchandiseInfo.map((merchandise)=>{
-    return{
-        field: merchandise.category,
-        headerName: merchandise.category,
-        sortable: false,
-        width: 160
-    }
-})]
-
-// let dynamicRow = [...ClientInfo.map(client=>{
-//   merchandiseInfo.map((merchandise =>{
-//     return (
-//           { id: client.index,
-//               customer : `${client.firstName} ${client.lastName}`
-//           }
-//       )
-//   }))
-// })]
-
-let  Columns = [
-
-    {
-        field: 'customer',
-        headerName: 'Client',
-        sortable: false,
-        width: 160,
-    },
+    let maxLength = ClientInfo.length + 1
+    let rows =  new Array(maxLength)
 
 
-    ...dynamicColumns,
-
-
-    {field: 'Quantity', headerName: ' Total received', width: 170},
+  if(DistributionResponse.clientDistributions){
 
 
 
-];
+     // let maxLength = DistributionResponse.clientDistributions.length
+     // let rows =  new Array(maxLength)
 
-// let RepartitionField = [...staticColumns]
+    function quantityDispatcher(id, name){
 
-    return(
-       <div style={{height:500, width: '145%'}} >
-           <Box flex={2} mr={{md: 0, lg: '1em'}}>
-               <Typography variant="h6" gutterBottom>
-                   Merchandise Repartition
-               </Typography>
-           </Box>
-           <br/>
-           <br/>
-           <DataGrid
-           columns={Columns}
-           rows={rows}
-       />
-       </div>
+        for (let i = 0; i < DistributionResponse.merchandiseAllocations.length; i++) {
+
+            if( DistributionResponse.merchandiseAllocations[i].merchandise.category === name ){
+
+                let MerchandiseInfo = DistributionResponse.merchandiseAllocations[i].clientInformations
+
+                if(id === "excess"){
+                    return DistributionResponse.merchandiseAllocations[i].excessQuantity.count
+                }
+
+                if(id === "sum"){
+                    return DistributionResponse.merchandiseAllocations[i].distributeQuantity.count
+                }
+
+                for (let j = 0; j < MerchandiseInfo.length ; j++) {
+
+                    if(MerchandiseInfo[j].id===id){
+                        return  MerchandiseInfo[j].distributedQuantity.count
+                    }
+                }
+            }
+
+        }
+
+     }
+
+
+        for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
+            rows[i]={}
+            rows[i].id = DistributionResponse.clientDistributions[i].id
+            rows[i].customer = `${DistributionResponse.clientDistributions[i].firstName}  ${DistributionResponse.clientDistributions[i].lastName}`
+            rows[i].Tilapia =   quantityDispatcher(rows[i].id ,DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[i].Caracas =  quantityDispatcher(rows[i].id ,DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[i].Divers =  quantityDispatcher(rows[i].id ,DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[i].Poison =  quantityDispatcher(rows[i].id ,DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[i].quantity = (rows[i].Tilapia + rows[i].Divers) + (rows[i].Poison +  rows[i].Caracas)
+        }
+        for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
+            rows[maxLength] = {}
+            rows[maxLength].customer = "excess"
+            rows[maxLength].id = maxLength
+            rows[maxLength].Tilapia = quantityDispatcher("excess", DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[maxLength].Caracas = quantityDispatcher("excess", DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[maxLength].Divers = quantityDispatcher("excess", DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[maxLength].Poison = quantityDispatcher("excess", DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[maxLength].quantity = (rows[maxLength].Tilapia + rows[maxLength].Caracas + rows[maxLength].Divers + rows[maxLength].Poison)
+        }
+        for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
+            rows[maxLength + 1] = {}
+            rows[maxLength + 1].customer = "sum"
+            rows[maxLength + 1].id = (maxLength + 1)
+            rows[maxLength + 1].Tilapia = quantityDispatcher("sum", DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[maxLength + 1].Caracas = quantityDispatcher("sum", DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[maxLength + 1].Divers = quantityDispatcher("sum", DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[maxLength + 1].Poison = quantityDispatcher("sum", DistributionResponse.merchandiseAllocations[i].merchandise.category)
+            rows[maxLength + 1].quantity = (rows[maxLength + 1].Tilapia + rows[maxLength + 1].Caracas) + (rows[maxLength + 1].Divers + rows[maxLength + 1].Poison)
+        }
+
+  // console.log(rows)
+
+  }
+
+
+
+
+    return (
+        <div style={{height: 300, width: '145%'}}>
+            <Box flex={2} mr={{md: 0, lg: '1em'}}>
+                <Typography variant="h6" gutterBottom>
+                    Merchandise Repartition
+                </Typography>
+            </Box>
+            <br/>
+            <DataGrid
+                columns={Columns}
+                rows={rows}
+            />
+            <br/>
+            <div>
+                <Button disabled variant="contained" color="primary">Validate</Button>
+            </div>
+        </div>
     )
 }
 
 
-export  default RepartitionTable
+export default RepartitionTable
