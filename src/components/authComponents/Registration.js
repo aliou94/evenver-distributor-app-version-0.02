@@ -60,7 +60,7 @@ let Cell = ({type, change}) => {
         <div>
             <div className={classes.input}>
                 <InputLabel id="label">Tel type</InputLabel>
-                <Select labelId="label" id="select" value={type} onChange={change}  name="phoneContacts[0].type">
+                <Select labelId="label" id="select" value={type} onChange={change} >
                     <MenuItem value="cell">{translate('auth.cell')}</MenuItem>
                     <MenuItem value="land">{translate('auth.land')}</MenuItem>
                     <MenuItem value="office">{translate('auth.office')}</MenuItem>

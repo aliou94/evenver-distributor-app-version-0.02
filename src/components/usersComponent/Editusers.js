@@ -9,7 +9,7 @@ import {
     DeleteButton,
     SelectInput
 } from 'react-admin';
-import {Typography, Box, Toolbar} from '@material-ui/core';
+import {Typography, Box, Toolbar, InputLabel} from '@material-ui/core';
 import FullNameField from "./IdentityField";
 import {usePermissions} from 'react-admin';
 import {useTranslate} from "ra-core";
@@ -143,7 +143,11 @@ const UsersForm = (props) => {
                                             <SimpleFormIterator>
                                                 <TextInput source="number" label="auth.phoneNumber" resource="users"/>
                                                 <TextInput source="provider" label="help.Provider"/>
-                                                <TextInput source="type" label="Type"/>
+                                                <SelectInput source="type" label="Tel type" choices={[
+                                                    { id: 'CELL', name: translate('auth.cell') },
+                                                    { id: 'LAND', name: translate('auth.land') },
+                                                    { id: 'OFFICE', name:translate('auth.office') },
+                                                ]} />
                                             </SimpleFormIterator>
                                         </ArrayInput>
                                     </Box>
