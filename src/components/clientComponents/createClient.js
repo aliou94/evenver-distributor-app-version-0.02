@@ -4,7 +4,7 @@ import {
     Create,
     SimpleForm, SimpleFormIterator,
     TextInput,
-    required
+    required, SelectInput
 } from 'react-admin';
 import {useTranslate} from "ra-core";
 import {Box, Typography} from "@material-ui/core";
@@ -39,7 +39,11 @@ export const CreateClient= props => {
                              <SimpleFormIterator>
                                  <TextInput source="number" label="Number"  validate={required(translate('ra.validation.required'))}/>
                                  <TextInput source="provider" label="Provider" />
-                                 <TextInput source="type" label="Type"/>
+                                 <SelectInput source="type" label="Tel type" choices={[
+                                     { id: 'CELL', name: translate('auth.cell') },
+                                     { id: 'LAND', name: translate('auth.land') },
+                                     { id: 'OFFICE', name:translate('auth.office') },
+                                 ]} />
                              </SimpleFormIterator>
                          </ArrayInput>
                      </Box>

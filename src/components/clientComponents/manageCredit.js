@@ -3,7 +3,7 @@ import {Field, Form} from 'react-final-form';
 import {
     Edit,
     FormWithRedirect,
-    required
+    required, SelectInput, SimpleFormIterator
 } from 'react-admin';
 import {Typography, Box, CardActions, Button} from '@material-ui/core';
 import FullNameField from "../usersComponent/IdentityField";
@@ -22,15 +22,20 @@ const ClientTitle = ({record},) => {
     identifier = record.id
     name = `${record.firstName}  ${record.lastName}`
     if (!record.pendingCredit || !record.pendingCredit[0]) {
-        pendingCredit = 0
+        pendingCredit = []
     } else {
-        pendingCredit = record.pendingCredit[0].value
+
+        pendingCredit = record.pendingCredit
     }
+
+
     if (!record.acceptedCredit || !record.acceptedCredit[0]) {
-        acceptedCredit = 0
+        acceptedCredit = []
     } else {
-        acceptedCredit = record.acceptedCredit[0].value
+        acceptedCredit = record.acceptedCredit
     }
+
+
     // console.log(identifier)
     // console.log( acceptedCredit)
     return (
@@ -42,7 +47,7 @@ const CreditValidationForm = () => {
 
     let translate = useTranslate()
 
-    const submit = function ({amount}) {
+    const submit = function ({amount,currencyCode}) {
         const token = localStorage.getItem('authentication');
         const name = localStorage.getItem('fullName');
 
@@ -55,7 +60,7 @@ const CreditValidationForm = () => {
             body: JSON.stringify({
                 receivedBy: name,
                 amount: {
-                    currencyCode: "XOF",
+                    currencyCode:currencyCode,
                     value: amount
                 }
             }),
@@ -89,6 +94,11 @@ const CreditValidationForm = () => {
                         label="add credit"
                         validate={required(translate('ra.validation.required'))}
                     />
+                    <SelectInput name="currencyCode"  label="currencyCode" choices={[
+                        { id: 'XOF', name: translate('XOF') },
+                        { id: 'USD', name: translate('USD') },
+                        { id: 'GNF', name:translate('GNF') },
+                    ]}        validate={required(translate('ra.validation.required'))} />
                     <Box>
                         <Box>
                             <CardActions>
@@ -112,6 +122,7 @@ const CreditValidationForm = () => {
 
 const CreditorsInfoForm = (props) => {
     const translate = useTranslate()
+    console.log(pendingCredit)
     return (
         <FormWithRedirect {...props}
                           render={() => (
@@ -132,13 +143,19 @@ const CreditorsInfoForm = (props) => {
                                                   <Typography variant="h6" gutterBottom>
                                                       {translate('help.pendingCredit')}
                                                   </Typography>
-                                                  <div>{pendingCredit}</div>
+                                                  <ol>{pendingCredit.map(credit=>(
+                                                      <li>
+                                                          {credit.value} {credit.currencyCode}
+                                                      </li>
+                                                  ))}</ol>
                                                   <Typography variant="h6" gutterBottom>
                                                       {translate('help.availableCredit')}
                                                   </Typography>
-                                                  <div>
-                                                      {acceptedCredit}
-                                                  </div>
+                                                  <ol>{acceptedCredit.map(credit=>(
+                                                      <li>
+                                                          {credit.value} {credit.currencyCode}
+                                                      </li>
+                                                  ))}</ol>
                                               </Box>
                                           </Box>
                                       </CardContent>
@@ -150,8 +167,9 @@ const CreditorsInfoForm = (props) => {
 }
 
 const InvoiceData = () => {
+
     let [Invoice] = useState([])
-    let [ClientInvoice, setClientInvoice] = useState([])
+
 
     let translate = useTranslate()
     const permission = usePermissions()
@@ -208,13 +226,15 @@ const InvoiceData = () => {
         },[page])*/
 
 
+
     const Validate = (ClientInvoice) => {
+
         const token = localStorage.getItem('authentication');
         const name = localStorage.getItem('fullName');
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', token);
-         console.log("The identifier: " + identifier);
+         // console.log("The identifier: " + identifier);
 
         const request
             = new Request(`http://localhost:8080/evendistributor/clientmanagement/clients/${identifier}/credits`,
@@ -223,8 +243,8 @@ const InvoiceData = () => {
             body: JSON.stringify(
                 {
                     "amount": {
-                        "currencyCode": "XOF",
-                        "value": ClientInvoice.amount
+                        "currencyCode": ClientInvoice.currencyCode,
+                        "value": ClientInvoice.amount,
                     },
                     "invoiceId": ClientInvoice.invoiceId,
                     "receivedOn": null,
@@ -238,7 +258,7 @@ const InvoiceData = () => {
         });
         return fetch(request)
             .then(response => {
-                console.log(response)
+                // console.log(response)
                 if (response.status < 200 || response.status >= 300) {
                     //throw new Error(response.statusText);
                     return ;
@@ -247,8 +267,9 @@ const InvoiceData = () => {
             })
             .then(validateCreditResponse => {
                 // status = validateCreditResponse.status
-                // console.log(validateCreditResponse)
-                window.location.reload();
+                // console.log(validateCreditResponse.status)
+
+                window.location.reload()
             });
     }
 
@@ -258,6 +279,7 @@ const InvoiceData = () => {
             [
                 {field: 'invoiceId', headerName: translate('help.invoiceId'), width: 150},
                 {field: 'amount', headerName: translate('help.Amount'), width: 90, type: 'number', sortable: false},
+                {field: 'currencyCode', headerName: "Currency", width: 90, type: 'string', sortable: false},
                 {field: 'status', headerName: translate('help.status'), width: 150, type: 'string', sortable: false},
                 {
                     field: 'receivedBy',
@@ -279,18 +301,13 @@ const InvoiceData = () => {
                     field: 'deposits',
                     headerName: 'validation',
                     renderCell: (params) => {
-                         console.log(params.row.status)
+                         // console.log(params.row.status)
                         if (params.row.status === "En attente" || params.row.status === "pending") {
                             return (
                                 <Button
                                     variant="contained"
                                     color="secondary"
                                     size="medium"
-                                    onClick={() => {
-                                        return (
-                                            Validate(ClientInvoice)
-                                        )
-                                    }}
                                     disabled={false}
                                 >
                                     {translate('help.validate')}
@@ -303,12 +320,6 @@ const InvoiceData = () => {
                                     variant="contained"
                                     color="secondary"
                                     size="medium"
-                                    onClick={() => {
-                                        return (
-
-                                            Validate(ClientInvoice)
-                                        )
-                                    }}
                                     disabled={true}
                                 >
                                     {translate('help.validate')}
@@ -343,8 +354,8 @@ const InvoiceData = () => {
             ]
         )
     return (
-        <ServerPaginationGrid invoice={Invoice} setClientInvoice={setClientInvoice} columns={columns}
-                              identifier={identifier}/>
+        <ServerPaginationGrid invoice={Invoice} columns={columns}
+                              identifier={identifier} validate={Validate}/>
     )
 }
 

@@ -38,7 +38,7 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
             cellClassName: (params) => {
                 // console.log(params)
                 return clsx('super-app', {
-                    negative: params.row.approvedDistribution > params.row.quantity,
+                    // negative: params.row.approvedDistribution > params.row.quantity,
                     positive: params.row.approvedDistribution <= params.row.quantity,
                 })
             }
@@ -51,7 +51,7 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
             cellClassName: (params) => {
                 // console.log(params)
                 return clsx('super-app', {
-                    negative: params.row.approvedDistribution > params.row.quantity,
+                    // negative: params.row.approvedDistribution > params.row.quantity,
                     positive: params.row.approvedDistribution <= params.row.quantity,
                 })
             }
@@ -66,7 +66,7 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
                 // console.log(params)
                 if (params) params.isEditable = EnableCalculate
                 return clsx('super-app', {
-                    negative: params.row.approvedDistribution > params.row.quantity,
+                    // negative: params.row.approvedDistribution > params.row.quantity,
                     positive: params.row.approvedDistribution <= params.row.quantity,
                 })
             }

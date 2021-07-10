@@ -47,7 +47,7 @@ const Menu =()=>{
                         />
         }
             {
-                permission.permissions==="ADMIN"
+                ( permission.permissions==="ADMIN"||"OPERATOR")
                 &&
                 <MenuItemLink
                     to={"/merchandisemanagement/merchandise"}
@@ -63,6 +63,7 @@ const Menu =()=>{
                 />
             }
             {
+                ( permission.permissions==="ADMIN") &&
                 <MenuItemLink
                     to={"/sample"}
                     primaryText={translate("dashboard.distribution")}

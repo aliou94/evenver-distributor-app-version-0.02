@@ -25,16 +25,6 @@ const ShipmentNumber = ({ record }) =>{
 }
 
 
-export const ShipmentEdit= props => (
-    <Edit{...props}
-         title={<ShipmentNumber/>}
-         undoable={false}
-    >
-        <UsersForm/>
-    </Edit>
-);
-
-
 const transform = data => {
     delete data.id;
     return({
@@ -123,6 +113,17 @@ const UsersForm=(props)=>{
         />
     )
 }
+
+
+
+export const ShipmentEdit= props => (
+    <Edit{...props}
+         title={<ShipmentNumber/>}
+         undoable={false}
+    >
+        <UsersForm/>
+    </Edit>
+);
 export default ShipmentEdit
 
 

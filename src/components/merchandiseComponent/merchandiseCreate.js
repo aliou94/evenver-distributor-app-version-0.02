@@ -11,8 +11,8 @@ const MerchandiseCreate = props => {
     return(
             <Create {...props} title={translate("help.createMerchandise")} riderect="List">
                 <SimpleForm>
-                    <TextInput source="category" label="help.category" />
-                    <TextInput source="name" label="help.name" />
+                    <TextInput source="name" label="help.category" />
+                    <TextInput source="category"  label="help.name" />
                 </SimpleForm>
             </Create>
 

@@ -32,8 +32,24 @@ export const FullNameFiled = ({record}) => {
                 <ArrayField source="phoneContacts" label="auth.phoneNumber"><SingleFieldList><ChipField source="number" /></SingleFieldList></ArrayField>
                 <TextField source="address.city" label="help.City"/>
                 <TextField source="address.state" label="help.State"/>
-                <ArrayField source="pendingCredit" label="help.pendingCredit"><SingleFieldList><ChipField source="value" /></SingleFieldList></ArrayField>
-                <ArrayField source="acceptedCredit" label="help.availableCredit"><SingleFieldList><ChipField source="value" /></SingleFieldList></ArrayField>
+                <ArrayField source="pendingCredit" label="help.pendingCredit">
+                    < Datagrid><ChipField source="value" label="amount"/>
+                    </ Datagrid>
+                </ArrayField>
+                <ArrayField source="pendingCredit" label="">
+                    < Datagrid><ChipField source="currencyCode"  label="currency"/>
+                    </ Datagrid>
+                </ArrayField>
+                <ArrayField source="acceptedCredit" label="help.availableCredit">
+                    < Datagrid>
+                        <ChipField source="value" label="amount"/>
+                    </ Datagrid>
+                </ArrayField>
+                <ArrayField source="acceptedCredit" label="">
+                    < Datagrid>
+                        <ChipField source="currencyCode" label="currency"/>
+                    </ Datagrid>
+                </ArrayField>
                 {
                     (permission.permissions==="DISTRIBUTOR")
                     ? null

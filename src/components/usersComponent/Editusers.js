@@ -7,7 +7,7 @@ import {
     FormWithRedirect,
     SaveButton,
     DeleteButton,
-    SelectInput
+    SelectInput, required
 } from 'react-admin';
 import {Typography, Box, Toolbar, InputLabel} from '@material-ui/core';
 import FullNameField from "./IdentityField";
@@ -84,6 +84,7 @@ const UsersForm = (props) => {
                                                 source="firstName"
                                                 label="auth.firstName"
                                                 fullWidth
+                                                validate={required(translate('ra.validation.required'))}
                                             />
                                         </Box>
                                         <Box
@@ -95,6 +96,7 @@ const UsersForm = (props) => {
                                                 resource="users"
                                                 label="auth.lastName"
                                                 fullWidth
+                                                validate={required(translate('ra.validation.required'))}
                                             />
                                         </Box>
                                     </Box>
@@ -103,6 +105,7 @@ const UsersForm = (props) => {
                                         source="email"
                                         resource="users"
                                         fullWidth
+                                        validate={required(translate('ra.validation.required'))}
                                     />
                                     <Box mt="1em"/>
                                     <Typography variant="h6" gutterBottom>

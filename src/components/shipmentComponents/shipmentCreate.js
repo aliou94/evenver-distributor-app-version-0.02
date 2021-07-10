@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {
     ReferenceInput, SelectInput,
     Create, SimpleForm, TextInput, NumberInput,
-    SaveButton
+    SaveButton, SimpleFormIterator
 } from 'react-admin';
 
 import RichTextInput from 'ra-input-rich-text';
@@ -34,6 +34,7 @@ const MerchandiseDataGrid = (props) => {
     const columns = [
         {field: 'merchandise', headerName: translate("help.merchandise"), width: 130},
         {field: 'quantity', headerName: translate("help.quantity"), width: 130},
+        {field: 'merchandiseUnit', headerName: "unit", width: 130},
     ]
 
     let MerchandiseSelection = props.merchandiseArray.map((item) => {
@@ -41,6 +42,7 @@ const MerchandiseDataGrid = (props) => {
         invoiceArray.id = item.merchandise.category
         invoiceArray.merchandise = item.merchandise.category
         invoiceArray.quantity = item.quantity.count
+        invoiceArray.merchandiseUnit = item.quantity.merchandiseUnit
         //console.log(invoiceArray)
         return invoiceArray
     })
@@ -71,6 +73,7 @@ const MerchandiseStockValidationForm = () => {
     const resetForm = useCallback(() => {
         form.change('merchandise.merchandise.category', null);
         form.change('merchandise.quantity.count', null);
+        form.change('merchandise.quantity.merchandiseUnit', null);
         form.change("merchandise.merchandise.id")
     }, [form]);
 
@@ -127,8 +130,9 @@ const MerchandiseStockValidationForm = () => {
 
     const generateID = (data, category) => {
         let verifiedObjectIndex = data.findIndex(x => x.category === category)
-        console.log(MerchandiseData)
+        console.log(data)
         if (verifiedObjectIndex >= 0) setShipmentIdentification(data[verifiedObjectIndex].id)
+        // console.log(setShipmentIdentification)
     }
 
     const handleClose = () => setOpen(false)
@@ -151,6 +155,9 @@ const MerchandiseStockValidationForm = () => {
                 <SelectInput source="category" optionValue="category" optionText={(record) => {
 
                     merchandiseIdentification.push(record)
+                    if(values.merchandise&&!values.merchandise.merchandise){
+                        return  null
+                    }
                     if (values.merchandise) generateID(merchandiseIdentification, values.merchandise.merchandise.category)
                     return (
                         record.category
@@ -163,11 +170,18 @@ const MerchandiseStockValidationForm = () => {
             {' '}
             <TextInput source="merchandise.merchandise.id" initialValue={ShipmentIdentification}
                        style={{display: "none"}}/>
+            <SelectInput source="merchandise.quantity.merchandiseUnit" label="merchandise unit" choices={[
+                { id: 'kg', name: "kg"},
+                { id: 'box', name: "box" },
+            ]} />
             <div>
                 <Button color="secondary"
                         disabled={
-                           ! values.merchandise  || !values.merchandise.quantity || !values.merchandise.merchandise
-                            || values.merchandise.merchandise.id === undefined
+                           ! values.merchandise
+                           || !values.merchandise.quantity
+                           || !values.merchandise.merchandise
+                           || !values.merchandise.quantity.merchandiseUnit
+                           || values.merchandise.merchandise.id === undefined
                         }
                         onClick={AddMerchandise}
                 >
@@ -175,6 +189,7 @@ const MerchandiseStockValidationForm = () => {
                 </Button>
             </div>
             <MerchandiseDataGrid merchandiseArray={MerchandiseData}/>
+            <br/>
             {isOpen &&
             <ConfirmationDialogRaw
                 open={open} value={option} newentry={newEntry}
@@ -203,7 +218,7 @@ const ShipmentCreate = props => {
         <Create {...props} title={translate("help.shipment")} transform={transform}>
             <SimpleForm toolbar={<SaveButton/>}>
                 <TextInput source="createdBy" initialValue={permission} style={{display: 'none'}}/>
-                <TextInput source="bolNumber"/>
+                <TextInput source="boatNumber"/>
                 <TextInput source="signature" initialValue={permission} disabled/>
                 <RichTextInput source="description" parse={v => v}/>
                 <MerchandiseStockValidationForm/>

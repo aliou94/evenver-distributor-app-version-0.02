@@ -63,6 +63,7 @@ export default function
                     invoiceArray.receivedBy = item.receivedBy
                     invoiceArray.acceptedBy = item.acceptedBy
                     invoiceArray.amount = item.amount.value
+                    invoiceArray.currencyCode= item.amount.currencyCode
                     invoiceArray.status = translate(`help.${item.status}`)
                     return invoiceArray
                 })
@@ -106,7 +107,10 @@ export default function
                         }
                     ]
                 }
-                onRowClick={(params)=> props.setClientInvoice(params.row)}
+                onRowClick={(params)=>{
+                    console.log(params.row)
+                    props.validate(params.row)
+                }}
                 {...Rows}
             />
         </div>

@@ -202,11 +202,11 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
 
             <Button variant="contained" color="primary" onClick={() => {
                 let checkBalance = customerInfo =>
-                    customerInfo.applicableCredit > customerInfo.credit
-                    || customerInfo.applicableCredit <= 0
-                    || customerInfo.applicableCredit === undefined
+                    customerInfo.applicableCredit >= customerInfo.credit
+                    // || customerInfo.applicableCredit <= 0
+                    // || customerInfo.applicableCredit === undefined
 
-                ClientSelectedRows.filter(checkBalance)[0] === undefined ? validate() : error(ClientSelectedRows.filter(checkBalance))
+                ClientSelectedRows.filter(checkBalance)[0] === undefined ? error(ClientSelectedRows.filter(checkBalance)) : validate()
             }}
                     disabled={ClientSelectedRows[0] === undefined}
             >

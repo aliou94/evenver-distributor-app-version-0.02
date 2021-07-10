@@ -12,8 +12,8 @@ const MerchandiseList = props => {
     return(
         <List {...props}  title={translate("help.listOfMerchandise")} bulkActionButtons={false}>
                 <Datagrid rowClick="edit">
-                    <TextField source="category" label="help.category"/>
-                    <TextField source="name" label="help.name"/>
+                    <TextField source="name" label="help.category"/>
+                    <TextField source="category" label="help.name"/>
                     {
                         (permission.permissions==="ADMIN")
                             ?<EditButton label="help.Modify"/>
