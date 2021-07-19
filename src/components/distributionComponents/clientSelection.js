@@ -34,7 +34,7 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
                 `${params.row.firstName || ''} ${params.row.lastName || ''}`,
         },
 
-        {field: 'credit', headerName: 'Credit', width: 100},
+         {field: 'credit', headerName: 'Credit', width: 100},
 
     ];
 
@@ -135,7 +135,7 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
                     //  throw new Error(response.statusText);
                     return;
                 }
-
+                    console.log(response)
                 let clientInfo = response.map((data) => {
                     let customerDatabase = {}
                     customerDatabase.id = data.id

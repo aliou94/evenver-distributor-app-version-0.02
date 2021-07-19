@@ -66,7 +66,7 @@ const UsersForm=(props)=>{
                                             ml={{ xs: 0, sm: '0.5em' }}
                                         >
                                             <TextInput
-                                                source="bolNumber"
+                                                source="boatNumber"
                                                 resource="shipments"
                                                 label="bol number"
                                                 fullWidth

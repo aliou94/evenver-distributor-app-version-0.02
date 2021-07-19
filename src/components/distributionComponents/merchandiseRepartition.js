@@ -78,6 +78,7 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
             })
             .then(distributionResponse => {
                 // status = validateCreditResponse.status
+                // console.log(DistributionResponse)
                 setDistributionResponse(distributionResponse)
             });
 
@@ -128,6 +129,8 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
      // let maxLength = DistributionResponse.clientDistributions.length
      // let rows =  new Array(maxLength)
 
+
+      let y =0
     function quantityDispatcher(id, name){
 
         for (let i = 0; i < DistributionResponse.merchandiseAllocations.length; i++) {
@@ -138,6 +141,7 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
                 // let MerchandiseInfoQ = DistributionResponse.merchandiseAllocations[i].distributeQuantity.count
 
                 if(id === "excess"){
+
                     return DistributionResponse.merchandiseAllocations[i].excessQuantity.count
                 }
 
@@ -151,53 +155,65 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
                         return  MerchandiseInfo[j].distributedQuantity.count
                     }
                 }
+
             }
 
         }
 
      }
 
-        for (let i = 0
-            ; i < DistributionResponse.clientDistributions.length; i++) {
-            rows[i]={}
-            rows[i].id = DistributionResponse.clientDistributions[i].id
-            rows[i].customer = `${DistributionResponse.clientDistributions[i].firstName}  ${DistributionResponse.clientDistributions[i].lastName}`
-            rows[i].Tilapia = quantityDispatcher(rows[i].id ,DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            rows[i].caracas = quantityDispatcher(rows[i].id ,DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            rows[i].Divers = quantityDispatcher(rows[i].id ,DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            rows[i].Liste = quantityDispatcher(rows[i].id ,DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            rows[i].quantity =  quantityDispatcher(rows[i].id ,DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            console.log(rows[i].quantity)
+
+
+
+
+      let dynamicRows = [...merchandiseInfo.map((merchandise) => {
+
+         return (
+            merchandise.category
+         )
+      })]
+
+
+
+        for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
+
+
+                rows[i]={}
+                rows[i].id = DistributionResponse.clientDistributions[i].id
+                rows[i].customer = `${DistributionResponse.clientDistributions[i].firstName}  ${DistributionResponse.clientDistributions[i].lastName}`
+            // rows[i].quantity = (rows[i].Tilapia + rows[i].Caracas + rows[i].Divers + rows[i].Poison)
+
+
+            for (let j = 0; j < dynamicRows.length ; j++) {
+
+                rows[i][dynamicRows[j]] = quantityDispatcher(rows[i].id ,dynamicRows[j])
+            }
+
+
+
         }
+
         for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
             rows[maxLength] = {}
             rows[maxLength].customer = "excess"
             rows[maxLength].id = maxLength
-            rows[maxLength].Tilapia = quantityDispatcher("excess", DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            rows[maxLength].caracas = quantityDispatcher("excess", DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            rows[maxLength].Divers = quantityDispatcher("excess", DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            rows[maxLength].Liste = quantityDispatcher("excess", DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            // rows[maxLength].quantity =
-            //     (rows[maxLength].Tilapia + rows[maxLength].Caracas + rows[maxLength].Divers + rows[maxLength].Liste)
+            // rows[maxLength].quantity = (rows[maxLength].Tilapia)
+            for (let j = 0; j < dynamicRows.length ; j++) {
+                rows[maxLength][dynamicRows[j]] = quantityDispatcher("excess" ,dynamicRows[j])
+            }
         }
         for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
             rows[maxLength+1] = {}
             rows[maxLength+1].customer = "sum"
             rows[maxLength+1].id = (maxLength + 1)
-            rows[maxLength+1].Tilapia = quantityDispatcher("sum", DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            rows[maxLength+1].caracas = quantityDispatcher("sum", DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            // console.log(rows[maxLength+1].Caracas)
-            rows[maxLength+1].Divers = quantityDispatcher("sum", DistributionResponse.merchandiseAllocations[i].merchandise.category)
-            rows[maxLength+1].Liste = quantityDispatcher("sum", DistributionResponse.merchandiseAllocations[i].merchandise.category)
             // rows[maxLength+1].quantity =
-            //     (rows[maxLength+1].Tilapia + rows[maxLength+1].Caracas) + (rows[maxLength+1].Divers + rows[maxLength+1].Liste)
+            //     (rows[maxLength+1].Tilapia + rows[maxLength+1].Caracas) + (rows[maxLength+1].Divers + rows[maxLength+1].Poison)
+            for (let j = 0; j < dynamicRows.length ; j++) {
+                rows[maxLength+1][dynamicRows[j]] = quantityDispatcher("sum" ,dynamicRows[j])
+            }
         }
 
-  // console.log(rows)
-
   }
-
-
 
 
     return (
