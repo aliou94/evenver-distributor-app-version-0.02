@@ -4,7 +4,7 @@ This a simple application that will evenly distribute boxes of merchandise based
 
 **Note**: This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-From here you will add progressively information about your app 
+.....Information will bw added progressively to this application as requierments and design keeps eveloving with the scope of the project.
 
 ## Available Scripts
 
