@@ -205,8 +205,8 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
                     customerInfo.applicableCredit >= customerInfo.credit
                     // || customerInfo.applicableCredit <= 0
                     // || customerInfo.applicableCredit === undefined
-
-                ClientSelectedRows.filter(checkBalance)[0] === undefined ? error(ClientSelectedRows.filter(checkBalance)) : validate()
+                console.log(  ClientSelectedRows.filter(checkBalance))
+                ClientSelectedRows.filter(checkBalance) === undefined ? error(ClientSelectedRows.filter(checkBalance)) : validate()
             }}
                     disabled={ClientSelectedRows[0] === undefined}
             >

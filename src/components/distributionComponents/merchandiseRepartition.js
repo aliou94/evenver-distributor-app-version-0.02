@@ -43,10 +43,6 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
 
     let [DistributionResponse , setDistributionResponse] = useState([])
 
-    // let [Rows, setRows] = useState([])
-    //
-    // let Rows
-
 
     useEffect(() => {
         const token = localStorage.getItem('authentication');
@@ -113,10 +109,12 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
         ...dynamicColumns,
 
 
-        {field: 'quantity',  editable:true, headerName: ' Total received', width: 170},
+        {field: 'quantity',  editable:true,   headerName: 'Total received', width: 170},
 
 
     ];
+
+
 
     let maxLength = ClientInfo.length + 1
     let rows =  new Array(maxLength)
@@ -125,12 +123,6 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
   if(DistributionResponse.clientDistributions){
 
 
-
-     // let maxLength = DistributionResponse.clientDistributions.length
-     // let rows =  new Array(maxLength)
-
-
-      let y =0
     function quantityDispatcher(id, name){
 
         for (let i = 0; i < DistributionResponse.merchandiseAllocations.length; i++) {
@@ -162,55 +154,68 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
 
      }
 
-
-
-
-
-      let dynamicRows = [...merchandiseInfo.map((merchandise) => {
+    let dynamicRows = [...merchandiseInfo.map((merchandise) => {
 
          return (
             merchandise.category
          )
       })]
 
+     function sumDispatcher(CustomerRepartition) {
+             let  sum = 0
+             for( let el in CustomerRepartition  ) {
+                 CustomerRepartition.customer = 0
+                 CustomerRepartition.id = 0
+                 if( CustomerRepartition.hasOwnProperty( el ) ) {
+                     sum += parseFloat(CustomerRepartition[el] );
+                 }
+             }
+             return sum;
+         }
 
 
         for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
-
-
                 rows[i]={}
-                rows[i].id = DistributionResponse.clientDistributions[i].id
-                rows[i].customer = `${DistributionResponse.clientDistributions[i].firstName}  ${DistributionResponse.clientDistributions[i].lastName}`
+            rows[i].id = DistributionResponse.clientDistributions[i].id
             // rows[i].quantity = (rows[i].Tilapia + rows[i].Caracas + rows[i].Divers + rows[i].Poison)
 
 
             for (let j = 0; j < dynamicRows.length ; j++) {
 
                 rows[i][dynamicRows[j]] = quantityDispatcher(rows[i].id ,dynamicRows[j])
+
             }
+            rows[i].quantity=sumDispatcher(rows[i])
+            rows[i].customer = `${DistributionResponse.clientDistributions[i].firstName}  
+                ${DistributionResponse.clientDistributions[i].lastName}`
 
-
-
+            rows[i].id = DistributionResponse.clientDistributions[i].id
+            // console.log(rows[i])
         }
 
         for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
             rows[maxLength] = {}
-            rows[maxLength].customer = "excess"
-            rows[maxLength].id = maxLength
-            // rows[maxLength].quantity = (rows[maxLength].Tilapia)
             for (let j = 0; j < dynamicRows.length ; j++) {
                 rows[maxLength][dynamicRows[j]] = quantityDispatcher("excess" ,dynamicRows[j])
             }
+
+             rows[maxLength].quantity = sumDispatcher(rows[maxLength])
+            rows[maxLength].id = maxLength
+            rows[maxLength].customer = "excess"
+
+
         }
+
         for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
             rows[maxLength+1] = {}
-            rows[maxLength+1].customer = "sum"
-            rows[maxLength+1].id = (maxLength + 1)
-            // rows[maxLength+1].quantity =
-            //     (rows[maxLength+1].Tilapia + rows[maxLength+1].Caracas) + (rows[maxLength+1].Divers + rows[maxLength+1].Poison)
             for (let j = 0; j < dynamicRows.length ; j++) {
                 rows[maxLength+1][dynamicRows[j]] = quantityDispatcher("sum" ,dynamicRows[j])
             }
+
+            rows[maxLength+1].quantity = sumDispatcher(rows[maxLength+1])
+            rows[maxLength+1].customer = "sum"
+            rows[maxLength+1].id = maxLength+1
+
         }
 
   }

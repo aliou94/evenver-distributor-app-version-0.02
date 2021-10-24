@@ -218,7 +218,7 @@ const ShipmentCreate = props => {
         <Create {...props} title={translate("help.shipment")} transform={transform}>
             <SimpleForm toolbar={<SaveButton/>}>
                 <TextInput source="createdBy" initialValue={permission} style={{display: 'none'}}/>
-                <TextInput source="boatNumber"/>
+                <TextInput source="bolNumber"/>
                 <TextInput source="signature" initialValue={permission} disabled/>
                 <RichTextInput source="description" parse={v => v}/>
                 <MerchandiseStockValidationForm/>
