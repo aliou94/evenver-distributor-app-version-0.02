@@ -47,7 +47,6 @@ const ShipmentSelector = ({
                 handleAnabel = {handleAnabel}
             />
 
-
         </div>
     )
 }

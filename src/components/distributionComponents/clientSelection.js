@@ -6,6 +6,8 @@ import {useEffect, useState} from "react";
 import {useNotify} from "ra-core";
 import {Box, Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import {useTranslate} from 'ra-core';
+
 import MerchandiseSelection from "./merchandiseSelection";
 
 
@@ -15,6 +17,7 @@ import MerchandiseSelection from "./merchandiseSelection";
 
 const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) => {
 
+    let translate = useTranslate()
 
     let [SelectionRows, setSelectionRows] = useState([])
 
@@ -154,67 +157,64 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
     }, [])
 
 
-    return (
-        <div style={{height:400, width: '100%'}} >
+    return <div style={{height:400, width: '100%'}} >
 
-            <div style={{display: !Flag  ? "inline" : "none"}}>
-                <Box flex={2} mr={{md: 0, lg: '1em'}}>
-                    <Typography variant="h6" gutterBottom>
-                        Select Customers
-                    </Typography>
-                </Box>
-
-                <DataGrid
-                    rows={SelectionRows}
-                    columns={selectionColumns}
-                    pageSize={5}
-                    checkboxSelection
-                    onSelectionModelChange={(row) => {
-                        let checkSelection = (customerInfo) => row.selectionModel.includes(customerInfo.id)
-                        return (
-                            handleClient(() => SelectionRows.filter(checkSelection)),
-                                setSelectionRows(SelectionRows)
-                        )
-                    }}
-                />
-            </div>
-
-            <br/>
-
+        <div style={{display: !Flag  ? "inline" : "none"}}>
             <Box flex={2} mr={{md: 0, lg: '1em'}}>
                 <Typography variant="h6" gutterBottom>
-                    Validate Applicable Credit
+                    {translate('help.selectCustomer')}
                 </Typography>
             </Box>
 
             <DataGrid
-                rows={ClientSelectedRows}
-                columns={selectedColumns}
+                rows={SelectionRows}
+                columns={selectionColumns}
                 pageSize={5}
-                onEditCellChangeCommitted={(params) => {
-                    let checkUpdate = (clientInfo) => params.id === clientInfo.id
-                    let indexOfUpdate = ClientSelectedRows.indexOf(SelectionRows.filter(checkUpdate)[0])
-                    return ClientSelectedRows[indexOfUpdate].applicableCredit = +params.props.value
+                checkboxSelection
+                onSelectionModelChange={(row) => {
+                    let checkSelection = (customerInfo) => row.selectionModel.includes(customerInfo.id)
+                    return handleClient(() => SelectionRows.filter(checkSelection)),
+                            setSelectionRows(SelectionRows)
                 }}
             />
-
-            <br/>
-
-            <Button variant="contained" color="primary" onClick={() => {
-                let checkBalance = customerInfo =>
-                    customerInfo.applicableCredit >= customerInfo.credit
-                    // || customerInfo.applicableCredit <= 0
-                    // || customerInfo.applicableCredit === undefined
-                console.log(  ClientSelectedRows.filter(checkBalance))
-                ClientSelectedRows.filter(checkBalance) === undefined ? error(ClientSelectedRows.filter(checkBalance)) : validate()
-            }}
-                    disabled={ClientSelectedRows[0] === undefined}
-            >
-                {Instructions}
-            </Button>
-
         </div>
-    )
+
+        <br/>
+
+        <Box flex={2} mr={{md: 0, lg: '1em'}}>
+            <Typography variant="h6" gutterBottom>
+                {/*Validate Applicable Credit*/}
+                {translate('help.validatecredit')}
+            </Typography>
+        </Box>
+
+        <DataGrid
+            rows={ClientSelectedRows}
+            columns={selectedColumns}
+            pageSize={5}
+            onEditCellChangeCommitted={(params) => {
+                let checkUpdate = (clientInfo) => params.id === clientInfo.id
+                let indexOfUpdate = ClientSelectedRows.indexOf(SelectionRows.filter(checkUpdate)[0])
+                return ClientSelectedRows[indexOfUpdate].applicableCredit = +params.props.value
+            }}
+        />
+
+        <br/>
+
+        <Button variant="contained" color="primary" onClick={() => {
+            let checkBalance = customerInfo =>
+                customerInfo.applicableCredit >= customerInfo.credit
+                // || customerInfo.applicableCredit <= 0
+                // || customerInfo.applicableCredit === undefined
+            // console.log(  ClientSelectedRows.filter(checkBalance))
+            ClientSelectedRows.filter(checkBalance) === undefined ? error(ClientSelectedRows.filter(checkBalance)) : validate()
+        }}
+                disabled={ClientSelectedRows[0] === undefined}
+        >
+            {Instructions}
+        </Button>
+
+    </div>
 };
 
 

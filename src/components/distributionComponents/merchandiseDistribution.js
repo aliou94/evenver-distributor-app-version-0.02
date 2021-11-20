@@ -46,7 +46,7 @@ const ClientList = () => {
 
     const handleApproval = (bool)=> setIsValid(bool)
 
-    const handleMerchandise = merchandiseInfo =>setMerchandiseSelectedRows(merchandiseInfo)
+    const handleMerchandise = merchandiseInfo => setMerchandiseSelectedRows(merchandiseInfo)
 
     const handleClient = clientInfo =>setClientSelectedRows(clientInfo )
 

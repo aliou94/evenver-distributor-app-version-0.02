@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
-    Create,
-    SimpleForm,
+    Create, Datagrid,
+    SimpleForm, TextField,
     TextInput,
 } from 'react-admin';
 import {useTranslate} from "ra-core";
@@ -13,6 +13,7 @@ const MerchandiseCreate = props => {
                 <SimpleForm>
                     <TextInput source="name" label="help.category" />
                     <TextInput source="category"  label="help.name" />
+                    <TextInput source="price"  label="price" />
                 </SimpleForm>
             </Create>
 

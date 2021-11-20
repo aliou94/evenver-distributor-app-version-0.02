@@ -14,6 +14,9 @@ const MerchandiseList = props => {
                 <Datagrid rowClick="edit">
                     <TextField source="name" label="help.category"/>
                     <TextField source="category" label="help.name"/>
+                    //create a help.price
+                    <TextField source="price.value" label="help.price"/>
+                    <TextField source="price.currencyCode" label="help.currency"/>
                     {
                         (permission.permissions==="ADMIN")
                             ?<EditButton label="help.Modify"/>

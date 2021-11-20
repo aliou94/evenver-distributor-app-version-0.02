@@ -104,6 +104,12 @@ const customFrenchMessages = {
             stock :"stock reçu/(cartons)",
             bol:"numero de borderau",
             shipmentNumber:"numéro d'embarquement",
+            price:"prix",
+            currency:"monnaie",
+            merchandiseUnit:"unité",
+            selectCustomer:"Selectionner la Clientelle",
+            validatecredit:"Validation du credit Applicable"
+
         },
         notify:{
             error: {

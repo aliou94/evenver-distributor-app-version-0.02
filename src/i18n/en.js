@@ -111,6 +111,11 @@ const customEnglishMessages = {
             stock :"stock received/(boxes)",
             bol:"bol number",
             shipmentNumber:"shipment number",
+            price:"price",
+            currency:"currency",
+            merchandiseUnit:"unit",
+            selectCustomer:"Select Customer",
+            validatecredit:"Validate Applicable Credit"
         },
         notify:{
             error: {

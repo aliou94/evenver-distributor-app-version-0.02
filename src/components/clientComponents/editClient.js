@@ -66,12 +66,12 @@ const UsersForm=(props)=>{
                                             />
                                         </Box>
                                     </Box>
-                                    <TextInput
-                                        type="email"
-                                        source="email"
-                                        resource="clients"
-                                        fullWidth
-                                    />
+                                    {/*<TextInput*/}
+                                    {/*    type="email"*/}
+                                    {/*    source="email"*/}
+                                    {/*    resource="clients"*/}
+                                    {/*    fullWidth*/}
+                                    {/*/>*/}
 
                                     <Typography variant="h6" gutterBottom>
                                         Address

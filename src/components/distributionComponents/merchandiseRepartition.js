@@ -6,16 +6,10 @@ import Button from "@material-ui/core/Button";
 
 
 
-
-
-
-
-
-
 const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
 
     let clientRequestData = ClientInfo.map(client => {
-        let clientRequest = {
+         let clientRequest = {
             "firstName": client.firstName,
             "id": client.id,
             "lastName": client.lastName,
@@ -27,15 +21,22 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
         return clientRequest
     })
 
+    // console.log("merchandise:",merchandiseInfo)
+
     let merchandiseRequest = merchandiseInfo.map((merchandise) => {
         let requestBody = {}
         requestBody.merchandise ={
             category: merchandise.category,
             id:merchandise.id,
-            name:merchandise.name
+            name:merchandise.name,
+            // adding prices to my request
+            price: {
+                currencyCode: "XOF",
+                value: merchandise.price
+            }
         }
             requestBody.quantity={
-            count: merchandise.approvedDistribution,
+              count: merchandise.approvedDistribution,
                 merchandiseUnit: "box"
             }
             return requestBody
@@ -84,10 +85,10 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
 
     let dynamicColumns = [...merchandiseInfo.map((merchandise) => {
         return {
-            field: merchandise.category,
-            headerName: merchandise.category,
+            field: merchandise.name,
+            headerName: merchandise.name,
             sortable: false,
-            width: 160,
+            width:160,
             editable: true,
             cellClassName: (params) => {
                  // console.log(params.row)
@@ -109,7 +110,9 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
         ...dynamicColumns,
 
 
-        {field: 'quantity',  editable:true,   headerName: 'Total received', width: 170},
+        {field:'quantity', editable:true,   headerName: 'Total received', width: 170},
+
+        {field:'balanceBroughtForward', editable:true,   headerName: 'Balance FWD   ', width: 170},
 
 
     ];
@@ -119,17 +122,20 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
     let maxLength = ClientInfo.length + 1
     let rows =  new Array(maxLength)
 
+    // console.log(DistributionResponse)
 
   if(DistributionResponse.clientDistributions){
-
 
     function quantityDispatcher(id, name){
 
         for (let i = 0; i < DistributionResponse.merchandiseAllocations.length; i++) {
 
-            if( DistributionResponse.merchandiseAllocations[i].merchandise.category === name ){
+            // probleme here changing category to name
 
-                let MerchandiseInfo = DistributionResponse.merchandiseAllocations[i].clientInformations
+            if( DistributionResponse.merchandiseAllocations[i].merchandise.name === name ){
+
+                let
+                    MerchandiseInfo = DistributionResponse.merchandiseAllocations[i].clientInformations
                 // let MerchandiseInfoQ = DistributionResponse.merchandiseAllocations[i].distributeQuantity.count
 
                 if(id === "excess"){
@@ -138,17 +144,58 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
                 }
 
                 if(id === "sum"){
-                    return DistributionResponse.merchandiseAllocations[i].distributeQuantity.count
-                }
 
-                 for (let j = 0; j < MerchandiseInfo.length ; j++) {
-
-                    if(MerchandiseInfo[j].id===id){
-                        return  MerchandiseInfo[j].distributedQuantity.count
+                    try {
+                        return DistributionResponse.merchandiseAllocations[i].distributeQuantity.count
                     }
+                    catch (exception_var) {
+                        return  0
+                    }
+
                 }
+
+
+
+
+                    for (let j=0 ; j < DistributionResponse.merchandiseAllocations.length; j++) {
+
+
+                        try{
+                           if ( MerchandiseInfo[j].id === id) {
+                              // return  DistributionResponse.merchandiseAllocations[j].distributeQuantity.count
+                             return   MerchandiseInfo[j].distributedQuantity.count
+                           }
+                        } catch (e) {
+
+                            return  0
+                        }
+
+
+                }
+
+              // console.log(merchandiseInfo[i].distributeQuantity)
+
+
+
+                // if( MerchandiseInfo[i].id === id){
+                //
+                //     let countInfo = ()=> merchandiseInfo[i].distributeQuantity
+                //
+                //     (countInfo)
+                //
+                //         ? countInfo.count
+                //
+                //         : 0
+                //
+                // }
+
 
             }
+
+            // if(DistributionResponse.merchandiseAllocations.length === 1){
+            //     return 0
+            // }
+
 
         }
 
@@ -157,7 +204,8 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
     let dynamicRows = [...merchandiseInfo.map((merchandise) => {
 
          return (
-            merchandise.category
+            // merchandise.category
+             merchandise.name
          )
       })]
 
@@ -175,7 +223,8 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
 
 
         for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
-                rows[i]={}
+
+            rows[i]={}
             rows[i].id = DistributionResponse.clientDistributions[i].id
             // rows[i].quantity = (rows[i].Tilapia + rows[i].Caracas + rows[i].Divers + rows[i].Poison)
 
@@ -185,12 +234,19 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
                 rows[i][dynamicRows[j]] = quantityDispatcher(rows[i].id ,dynamicRows[j])
 
             }
+
             rows[i].quantity=sumDispatcher(rows[i])
-            rows[i].customer = `${DistributionResponse.clientDistributions[i].firstName}  
+
+            rows[i].customer = `${DistributionResponse.clientDistributions[i].firstName}
                 ${DistributionResponse.clientDistributions[i].lastName}`
 
             rows[i].id = DistributionResponse.clientDistributions[i].id
-            // console.log(rows[i])
+
+             // console.log( DistributionResponse)
+
+            console.log( clientRequestData[i].purchaseAmount.value - DistributionResponse.clientDistributions[i].purchaseAmount.value)
+
+             rows[i].balanceBroughtForward = `${clientRequestData[i].purchaseAmount.value - DistributionResponse.clientDistributions[i].purchaseAmount.value}`
         }
 
         for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
@@ -199,7 +255,7 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
                 rows[maxLength][dynamicRows[j]] = quantityDispatcher("excess" ,dynamicRows[j])
             }
 
-             rows[maxLength].quantity = sumDispatcher(rows[maxLength])
+            rows[maxLength].quantity = sumDispatcher(rows[maxLength])
             rows[maxLength].id = maxLength
             rows[maxLength].customer = "excess"
 
@@ -209,7 +265,7 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
         for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
             rows[maxLength+1] = {}
             for (let j = 0; j < dynamicRows.length ; j++) {
-                rows[maxLength+1][dynamicRows[j]] = quantityDispatcher("sum" ,dynamicRows[j])
+                rows[maxLength+1][dynamicRows[j]] = quantityDispatcher("sum",dynamicRows[j])
             }
 
             rows[maxLength+1].quantity = sumDispatcher(rows[maxLength+1])
@@ -240,6 +296,5 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
         </div>
     )
 }
-
 
 export default RepartitionTable

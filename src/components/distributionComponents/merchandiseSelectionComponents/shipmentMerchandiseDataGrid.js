@@ -31,7 +31,7 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
     const Columns = [
 
         {
-            field: 'category',
+            field: 'name',
             headerName: 'Merchanidise',
             width: 160,
             editable: false,
@@ -46,6 +46,19 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
 
         {
             field: 'quantity', headerName: 'Quantity',
+            width: 100,
+            editable: false,
+            cellClassName: (params) => {
+                // console.log(params)
+                return clsx('super-app', {
+                    // negative: params.row.approvedDistribution > params.row.quantity,
+                    positive: params.row.approvedDistribution <= params.row.quantity,
+                })
+            }
+        },
+
+        {
+            field: 'price', headerName: 'Price',
             width: 100,
             editable: false,
             cellClassName: (params) => {
@@ -105,9 +118,12 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
                 }
 
                 let merchandiseInfo = response.merchandise.map((data) => {
+                    console.log(data)
                     let dataInfo = {}
                     dataInfo.id = data.merchandise.id
-                    dataInfo.category = data.merchandise.category
+                    // dataInfo.category = data.merchandise.category
+                    dataInfo.name = data.merchandise.name
+                    dataInfo.price = data.merchandise.price.value
                     dataInfo.quantity = data.quantity.count
                     dataInfo.approvedDistribution = data.quantity.count
                     return dataInfo
@@ -132,7 +148,6 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
                 columns={Columns}
                 pageSize={5}
                 onEditCellChangeCommitted={(params) => {
-
                     let checkUpdate = (clientInfo) => params.id === clientInfo.id
                     let indexOfUpdate = Row.indexOf(Row.filter(checkUpdate)[0])
                     Row[indexOfUpdate].approvedDistribution = +params.props.value

@@ -79,7 +79,7 @@ const UsersForm=(props)=>{
                                     </Typography>
                                     <ArrayInput source="merchandise" label="shipment merchandise">
                                         <SimpleFormIterator disableRemove disableAdd>
-                                            <TextInput source="merchandise.category" label="category"/>
+                                            <TextInput source="merchandise.name" label="category"/>
                                             <TextInput source="merchandise.id" style={{display:'none'}}/>
                                                 <NumberInput source="quantity.count" label="quantity"/>
                                         </SimpleFormIterator>

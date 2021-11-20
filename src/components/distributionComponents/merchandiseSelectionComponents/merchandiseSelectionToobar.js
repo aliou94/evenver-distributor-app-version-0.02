@@ -30,7 +30,7 @@ const MerchandiseSelectionToolbar = ({
     }
 
 
-    console.log(ShipmentSelected)
+    // console.log(ShipmentSelected)
 
     return (
 

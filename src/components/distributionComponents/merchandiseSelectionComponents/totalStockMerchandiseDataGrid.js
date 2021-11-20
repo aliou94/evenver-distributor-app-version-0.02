@@ -114,6 +114,8 @@ const StockMerchandiseDatagrid = ({
                     let dataInfo = {}
                     dataInfo.id = data.merchandise.id
                     dataInfo.category = data.merchandise.category
+                    // dataInfo.name = data.merchandise.name
+
                     dataInfo.quantity = data.quantity.count
                     dataInfo.approvedDistribution = data.quantity.count
                     return dataInfo
