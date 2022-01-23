@@ -20,7 +20,6 @@ export const FullNameFiled = ({record}) => {
 
  export const Clientlist = props => {
     const permission = usePermissions()
-    //console.log(permission.permissions)
     let translate = useTranslate()
     return(
         <List {...props}

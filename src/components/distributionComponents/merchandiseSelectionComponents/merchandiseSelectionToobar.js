@@ -24,13 +24,13 @@ const MerchandiseSelectionToolbar = ({
 
 
     let handleDisability = () => {
-        // console.log(EnableCalculate)
+
         !EnableCalculate ? handleInstruction("Validate  Selection") : handleInstruction("Update Selection")
         handleAnabel(!EnableCalculate)
     }
 
 
-    // console.log(ShipmentSelected)
+
 
     return (
 

@@ -36,14 +36,13 @@ let submit = ({email}) => {
     });
         fetch(request)
             .then(response => {
-                console.log(response)
+
                 if (response.status < 200 || response.status >= 300) {
                     throw new Error(response.statusText);
                 }
                 return response.json();
             })
             .then(resetPasswordResponse => {
-                console.log(resetPasswordResponse.passcode)
                 if(resetPasswordResponse.status==="SUCCESS"){
                     return(
                         setdisplayConfirmPasscodePage(true),

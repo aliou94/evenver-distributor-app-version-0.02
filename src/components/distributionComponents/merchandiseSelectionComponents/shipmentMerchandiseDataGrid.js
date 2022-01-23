@@ -36,7 +36,7 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
             width: 160,
             editable: false,
             cellClassName: (params) => {
-                // console.log(params)
+
                 return clsx('super-app', {
                     // negative: params.row.approvedDistribution > params.row.quantity,
                     positive: params.row.approvedDistribution <= params.row.quantity,
@@ -49,7 +49,6 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
             width: 100,
             editable: false,
             cellClassName: (params) => {
-                // console.log(params)
                 return clsx('super-app', {
                     // negative: params.row.approvedDistribution > params.row.quantity,
                     positive: params.row.approvedDistribution <= params.row.quantity,
@@ -62,7 +61,6 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
             width: 100,
             editable: false,
             cellClassName: (params) => {
-                // console.log(params)
                 return clsx('super-app', {
                     // negative: params.row.approvedDistribution > params.row.quantity,
                     positive: params.row.approvedDistribution <= params.row.quantity,
@@ -76,7 +74,6 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
             // editable: true,
             width: 150,
             cellClassName: (params) => {
-                // console.log(params)
                 if (params) params.isEditable = EnableCalculate
                 return clsx('super-app', {
                     // negative: params.row.approvedDistribution > params.row.quantity,
@@ -118,7 +115,7 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
                 }
 
                 let merchandiseInfo = response.merchandise.map((data) => {
-                    console.log(data)
+
                     let dataInfo = {}
                     dataInfo.id = data.merchandise.id
                     // dataInfo.category = data.merchandise.category
@@ -128,13 +125,13 @@ const ShipmentMerchandiseDatagrid = ({identifier, Row, setRow, EnableCalculate, 
                     dataInfo.approvedDistribution = data.quantity.count
                     return dataInfo
                 })
-                // console.log(merchandiseInfo)
+
                 setRow(merchandiseInfo)
-                // console.log(Row)
+
 
                 // setSelectionRows(clientInfo)
             }).catch(error => {
-            console.log(error)
+
         })
 
     }, [identifier])

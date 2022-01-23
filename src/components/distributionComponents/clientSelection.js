@@ -52,7 +52,7 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
                 return `${params.row.firstName} ${params.row.lastName}`
             },
             cellClassName: (params) => {
-                // console.log(params)
+
                 return clsx('super-app', {
                     negative: params.row.applicableCredit > params.row.credit,
                     positive: params.row.applicableCredit <= params.row.credit,
@@ -78,7 +78,7 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
             width: 190,
             cellClassName: (params) => {
                 if (params) params.isEditable = !Flag
-                // console.log(params)
+
                 return clsx('super-app', {
                     negative: params.value > params.row.credit,
                     positive: params.value <= params.row.credit,
@@ -138,7 +138,7 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
                     //  throw new Error(response.statusText);
                     return;
                 }
-                    console.log(response)
+
                 let clientInfo = response.map((data) => {
                     let customerDatabase = {}
                     customerDatabase.id = data.id
@@ -148,7 +148,7 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
                     customerDatabase.credit = data.acceptedCredit[0].value
                     return customerDatabase
                 })
-                  console.log(clientInfo)
+
                 setSelectionRows(clientInfo)
             }).catch(error => {
             notify(error)
@@ -206,7 +206,7 @@ const ClientSelection = ({Flag, handleFlag, ClientSelectedRows, handleClient}) =
                 customerInfo.applicableCredit >= customerInfo.credit
                 // || customerInfo.applicableCredit <= 0
                 // || customerInfo.applicableCredit === undefined
-            // console.log(  ClientSelectedRows.filter(checkBalance))
+            // (  ClientSelectedRows.filter(checkBalance))
             ClientSelectedRows.filter(checkBalance) === undefined ? error(ClientSelectedRows.filter(checkBalance)) : validate()
         }}
                 disabled={ClientSelectedRows[0] === undefined}

@@ -36,8 +36,6 @@ const ClientTitle = ({record},) => {
     }
 
 
-    // console.log(identifier)
-    // console.log( acceptedCredit)
     return (
         record ? <FullNameField record={record} size="32"/> : null
     )
@@ -51,7 +49,7 @@ const CreditValidationForm = () => {
         const token = localStorage.getItem('authentication');
         const name = localStorage.getItem('fullName');
 
-//console.log(amount,identifier)
+
         let headers = new Headers();
         headers.append('Content-Type', 'application/json')
         headers.append('Authorization', token)
@@ -68,14 +66,14 @@ const CreditValidationForm = () => {
         });
         return fetch(request)
             .then(response => {
-              //  console.log(response)
+
                 if (response.status < 200 || response.status >= 300) {
                     throw new Error(response.statusText);
                 }
                 return response.json();
             })
             .then(validateCreditResponse => {
-                //console.log(validateCreditResponse)
+
                 window.location.reload();
             });
     };
@@ -122,7 +120,7 @@ const CreditValidationForm = () => {
 
 const CreditorsInfoForm = (props) => {
     const translate = useTranslate()
-    console.log(pendingCredit)
+
     return (
         <FormWithRedirect {...props}
                           render={() => (
@@ -221,7 +219,6 @@ const InvoiceData = () => {
                     })
 
                     setInvoice(()=>Invoices)
-                    //console.log(Invoices)
                 })
         },[page])*/
 
@@ -234,7 +231,7 @@ const InvoiceData = () => {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', token);
-         // console.log("The identifier: " + identifier);
+
 
         const request
             = new Request(`http://localhost:8080/evendistributor/clientmanagement/clients/${identifier}/credits`,
@@ -258,7 +255,7 @@ const InvoiceData = () => {
         });
         return fetch(request)
             .then(response => {
-                // console.log(response)
+
                 if (response.status < 200 || response.status >= 300) {
                     //throw new Error(response.statusText);
                     return ;
@@ -267,7 +264,7 @@ const InvoiceData = () => {
             })
             .then(validateCreditResponse => {
                 // status = validateCreditResponse.status
-                // console.log(validateCreditResponse.status)
+
 
                 window.location.reload()
             });
@@ -301,7 +298,7 @@ const InvoiceData = () => {
                     field: 'deposits',
                     headerName: 'validation',
                     renderCell: (params) => {
-                         // console.log(params.row.status)
+
                         if (params.row.status === "En attente" || params.row.status === "pending") {
                             return (
                                 <Button
@@ -315,7 +312,6 @@ const InvoiceData = () => {
                             )
                         } else {
                             return (
-                                // console.log(params.row.status),
                                 <Button
                                     variant="contained"
                                     color="secondary"

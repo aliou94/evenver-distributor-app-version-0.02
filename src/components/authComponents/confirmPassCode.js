@@ -22,7 +22,7 @@ const ConfirmPassCode = function (props) {
     let classes = Usestyles(props);
 
     let submit = function ({email=props.email,passcode}) {
-        console.log(passcode,email)
+
         const request = new Request('http://localhost:8080/evendistributor/usermanagement/password-validate', {
             method: 'POST',
             body: JSON.stringify({email,passcode}),
@@ -30,14 +30,14 @@ const ConfirmPassCode = function (props) {
         });
         return fetch(request)
             .then(response => {
-                console.log(response)
+
                 if (response.status < 200 || response.status >= 300) {
                     throw new Error(response.statusText);
                 }
                 return response.json();
             })
             .then(validatePasswordResponse => {
-                console.log(validatePasswordResponse.status)
+
                 if(validatePasswordResponse.status==="SUCCESS"){
                     return(
                         setshowResetPassword("SUCCESS")

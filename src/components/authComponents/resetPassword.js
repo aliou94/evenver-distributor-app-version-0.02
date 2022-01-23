@@ -20,7 +20,7 @@ const ResetPassword = function(props){
     let classes = Usestyles(props);
 
     let submit = function ({userPassword,password}) {
-        console.log(userPassword)
+
         if(userPassword===password){
             const request = new Request('http://localhost:8080/evendistributor/usermanagement/users', {
                 method: 'PATCH',
@@ -29,14 +29,13 @@ const ResetPassword = function(props){
             });
             return fetch(request)
                 .then(response => {
-                    console.log(response)
+
                     if (response.status < 200 || response.status >= 300) {
                         throw new Error(response.statusText);
                     }
                     return response.json();
                 })
                 .then(resetPasswordResponse => {
-                    console.log(resetPasswordResponse.status)
                         return(
                             notify(translate('help.update')),
                                 setshowLoginForm(true)

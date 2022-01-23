@@ -45,7 +45,6 @@ export default function
         fetch(request)
             .then((res)=>{
               //let  totalPages = parseFloat(res.headers.get('X-Total-Count'))
-                //console.log(totalPages)
                 return(
                     res.json()
                 )
@@ -68,7 +67,7 @@ export default function
                     return invoiceArray
                 })
                 setRows(()=>Invoices)
-               // console.log(Invoices)
+
             }).catch(error => {
             notify(error)
         })
@@ -80,7 +79,7 @@ export default function
                 return;
             }
             setRows(newRows)
-            //console.log(Rows.length)
+
         })();
 
         return () => {
@@ -108,7 +107,6 @@ export default function
                     ]
                 }
                 onRowClick={(params)=>{
-                    console.log(params.row)
                     props.validate(params.row)
                 }}
                 {...Rows}

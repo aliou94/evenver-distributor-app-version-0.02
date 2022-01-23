@@ -3,6 +3,7 @@ import {DataGrid} from '@material-ui/data-grid';
 import {useEffect, useState} from "react";
 import {Box, Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import {object} from "prop-types";
 
 
 
@@ -21,7 +22,7 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
         return clientRequest
     })
 
-    // console.log("merchandise:",merchandiseInfo)
+
 
     let merchandiseRequest = merchandiseInfo.map((merchandise) => {
         let requestBody = {}
@@ -44,6 +45,9 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
 
     let [DistributionResponse , setDistributionResponse] = useState([])
 
+    let expenditure = {
+
+    }
 
     useEffect(() => {
         const token = localStorage.getItem('authentication');
@@ -66,7 +70,7 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
     });
         return fetch(request)
             .then(response => {
-                // console.log(response)
+
                 if (response.status < 200 || response.status >= 300) {
                     //throw new Error(response.statusText);
                     return;
@@ -75,7 +79,7 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
             })
             .then(distributionResponse => {
                 // status = validateCreditResponse.status
-                // console.log(DistributionResponse)
+
                 setDistributionResponse(distributionResponse)
             });
 
@@ -91,7 +95,6 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
             width:160,
             editable: true,
             cellClassName: (params) => {
-                 // console.log(params.row)
             }
         }
     })]
@@ -122,7 +125,7 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
     let maxLength = ClientInfo.length + 1
     let rows =  new Array(maxLength)
 
-    // console.log(DistributionResponse)
+
 
   if(DistributionResponse.clientDistributions){
 
@@ -173,28 +176,9 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
 
                 }
 
-              // console.log(merchandiseInfo[i].distributeQuantity)
-
-
-
-                // if( MerchandiseInfo[i].id === id){
-                //
-                //     let countInfo = ()=> merchandiseInfo[i].distributeQuantity
-                //
-                //     (countInfo)
-                //
-                //         ? countInfo.count
-                //
-                //         : 0
-                //
-                // }
 
 
             }
-
-            // if(DistributionResponse.merchandiseAllocations.length === 1){
-            //     return 0
-            // }
 
 
         }
@@ -242,11 +226,35 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
 
             rows[i].id = DistributionResponse.clientDistributions[i].id
 
-             // console.log( DistributionResponse)
 
-            console.log( clientRequestData[i].purchaseAmount.value - DistributionResponse.clientDistributions[i].purchaseAmount.value)
 
-             rows[i].balanceBroughtForward = `${clientRequestData[i].purchaseAmount.value - DistributionResponse.clientDistributions[i].purchaseAmount.value}`
+
+            try{
+
+                expenditure[DistributionResponse.merchandiseAllocations[i].merchandise.name] =
+                       DistributionResponse.merchandiseAllocations[i].clientInformations[i].distributedQuantity.count
+                                        *
+                        DistributionResponse.merchandiseAllocations[i].merchandise.price.value
+
+                 console.log(DistributionResponse.merchandiseAllocations[i].clientInformations)
+
+                function test(amount) {
+                           console.log(amount)
+                }
+
+                test(clientRequestData[i].purchaseAmount.value)
+            }  catch (e) {
+
+            }
+
+
+
+             rows[i].balanceBroughtForward = clientRequestData[i].purchaseAmount.value
+
+            // rows[i].balanceBroughtForward = (   DistributionResponse.merchandiseAllocations[i].clientInformations[i].distributedQuantity.count * DistributionResponse.merchandiseAllocations[i].merchandise.price.value)
+
+
+
         }
 
         for (let i = 0; i < DistributionResponse.clientDistributions.length; i++) {
@@ -291,7 +299,11 @@ const RepartitionTable = ({ClientInfo, merchandiseInfo}) => {
             />
             <br/>
             <div>
-                <Button disabled variant="contained" color="primary">Validate</Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={()=>console.log("hello world")}
+                >Validate</Button>
             </div>
         </div>
     )
